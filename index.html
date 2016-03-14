@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Convert WOFF to OTF online</title>
+  <link rel=author href="https://arty.name">
+  <style>
+    html {margin: 0; padding: 0; width: 100%; height: 100%;}
+    body {height: 100%; padding: 1em; box-sizing: border-box; max-width: 40em; margin: auto;}
+    h1, h2 {font-family: sans-serif;}
+    a {display: block; margin-top: 1em;}    
+    #github {position: absolute; right: .5em; top: -.5em;}
+  </style>
+  <script src="pako_deflate.js"></script>
+  <script src="pako_inflate.js"></script>
+  <!-- <script src="woff2otf.js"></script> -->
+  <!-- <script src="file_util.js"></script> -->
+  <script src="ttf2woff.js"></script>
+</head>
+<body>
+
+<script>
+
+  function buffer2url(buffer) {
+    return URL.createObjectURL(new Blob([buffer], {type: 'application/font-sfnt'}));
+  }
+
+  document.documentElement.ondragover = function(event) {
+    if (event.dataTransfer.items) {
+      return [].filter.call(event.dataTransfer.items, function(item) {
+        return item.kind !== 'file' || !item.type !== 'application/font-woff';
+      }).length === 0;
+    } else {
+      return !event.dataTransfer.types.contains('application/x-moz-file')
+    }
+  };
+  
+  document.documentElement.ondrop = function(event) {
+    event.preventDefault();
+
+    var container = document.getElementById('fonts');
+
+    [].forEach.call(event.dataTransfer.files, function(file) {
+      var reader = new FileReader();
+      reader.onload = function(event) {
+        var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+        link.textContent = link.download = file.name.replace(/\.woff$/, '.otf');
+        link.href = buffer2url(convert_streams(event.target.result));
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    return false;
+  };
+  
+function uploadAndSubmit() { 
+  var form = document.forms["demoForm"]; 
+
+  if (form["file"].files.length > 0) { 
+    // 寻找表单域中的 <input type="file" ... /> 标签
+    var file = form["file"].files[0]; 
+    console.log("file name = %s", file.name)
+    // try sending 
+    var reader = new FileReader(); 
+
+    reader.onloadstart = function() { 
+      // 这个事件在读取开始时触发
+      console.log("onloadstart"); 
+      document.getElementById("bytesTotal").textContent = file.size; 
+    } 
+    reader.onprogress = function(p) { 
+      // 这个事件在读取进行中定时触发
+      console.log("onprogress"); 
+      document.getElementById("bytesRead").textContent = p.loaded; 
+    } 
+
+    var container = document.getElementById('fonts');
+    reader.onload = function(event) { 
+      // 这个事件在读取成功结束后触发
+      console.log("load complete"); 
+      var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+      link.textContent = link.download = file.name.replace(/\.ttf$/, '.woff');
+      console.log("file name = %s --> %s", file.name, link.textContent)
+      var errorCode = new Object();
+      errorCode.status = -1;
+      console.log("err code = %d", errorCode.status);
+      link.href = buffer2url(ttf2woff(event.target.result, errorCode));
+      console.log("err code = %d", errorCode.status);
+      console.log("load complete 2"); 
+    } 
+
+    reader.readAsArrayBuffer(file); 
+  } else { 
+    alert ("Please choose a file."); 
+  } 
+}
+</script>
+
+<h1>Convert WOFF to OTF online</h1>
+<h2>Drop your files on this page to convert them</h2>
+<section id="fonts"></section>
+<a id="github" href="https://github.com/arty-name/woff2otf">GitHub</a>
+
+<!-- 用于文件上传的表单元素 --> 
+<section>
+<form name="demoForm" id="demoForm" method="post" enctype="multipart/form-data"  action="javascript: uploadAndSubmit();"> 
+  <p>Upload File: <input type="file" name="file" /></p> 
+  <p><input type="submit" value="Submit" /></p> 
+</form> 
+<div>Progessing (in Bytes): <span id="bytesRead"> 
+  </span> / <span id="bytesTotal"></span> 
+</div> 
+</section>
+
+</body>
+</html>
