@@ -24,6 +24,9 @@
   function buffer2url(buffer) {
     return URL.createObjectURL(new Blob([buffer], {type: 'application/font-sfnt'}));
   }
+  function buffer2url_woff(buffer) {
+    return URL.createObjectURL(new Blob([buffer], {type: 'application/font-woff'}));
+  }
 
   document.documentElement.ondragover = function(event) {
     if (event.dataTransfer.items) {
@@ -84,7 +87,7 @@ function uploadAndSubmit() {
       var errorCode = new Object();
       errorCode.status = -1;
       console.log("err code = %d", errorCode.status);
-      link.href = buffer2url(ttf2woff(event.target.result, errorCode));
+      link.href = buffer2url_woff(ttf2woff(event.target.result, errorCode));
       console.log("err code = %d", errorCode.status);
       console.log("load complete 2"); 
     } 
@@ -93,6 +96,50 @@ function uploadAndSubmit() {
   } else { 
     alert ("Please choose a file."); 
   } 
+}
+
+window.ttfFileArray = new Object();
+function readUrlBinary(filename) {
+	var oReq = new XMLHttpRequest();
+	oReq.open("GET", "/"+filename, true);
+	oReq.responseType = "arraybuffer";
+
+	oReq.onload = function (oEvent) {
+		var arrayBuffer = oReq.response; // Note: not oReq.responseText
+		if (arrayBuffer) {
+			var byteArray = new Uint8Array(arrayBuffer);
+      window.ttfFileArray = byteArray;
+      console.log("length =%d", byteArray.length);
+      document.getElementById("process").innerHTML+="process filename :"+filename + "len="+byteArray.length+"</br>";
+
+			//for (var i = 0; i < 32; i++) {
+			//	// do something with each byte in the array
+      //  console.log("%d=%d", i, byteArray[i]);
+      //}
+    }
+  };
+
+  oReq.send(null);
+}
+
+function logArray(testArray) {
+    console.log("length =%d", testArray.length);
+    document.getElementById("process").innerHTML+= "test array length =" + testArray.length + "<br>";
+    for (var i = 0; i < 32 && i < testArray.length; i++) {
+      console.log("%d=%d", i, testArray[i]);
+      document.getElementById("process").innerHTML+= "test array "+i+ "=" + testArray[i]+"<br>";
+    }
+}
+
+function waitForFile(testArray) {
+  i = 0;
+  while (isNaN(testArray.length) || testArray.length > 0) {
+    console.log("wait %d=%d",i, testArray.length);
+    i++;
+    if (i>1000) {
+      break;
+    }
+  }
 }
 </script>
 
@@ -111,6 +158,11 @@ function uploadAndSubmit() {
   </span> / <span id="bytesTotal"></span> 
 </div> 
 </section>
-
+<button onclick="logArray(window.ttfFileArray)">点击这里</button>
+<script> 
+readUrlBinary("test.ttf");
+readUrlBinary("menlo.ttf");
+</script>
+<p id="process"> process...</br></p>
 </body>
 </html>
