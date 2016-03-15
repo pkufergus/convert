@@ -16,6 +16,9 @@
   <!-- <script src="woff2otf.js"></script> -->
   <!-- <script src="file_util.js"></script> -->
   <script src="ttf2woff.js"></script>
+  <script src="font_lib/test.js"></script>
+  <script src="font_lib/TableTTFs.js"></script>
+  <script src="font_lib/file_util.js"></script>
 </head>
 <body>
 
@@ -98,49 +101,16 @@ function uploadAndSubmit() {
   } 
 }
 
-window.ttfFileArray = new Object();
-function readUrlBinary(filename) {
-	var oReq = new XMLHttpRequest();
-	oReq.open("GET", "/"+filename, true);
-	oReq.responseType = "arraybuffer";
-
-	oReq.onload = function (oEvent) {
-		var arrayBuffer = oReq.response; // Note: not oReq.responseText
-		if (arrayBuffer) {
-			var byteArray = new Uint8Array(arrayBuffer);
-      window.ttfFileArray = byteArray;
-      console.log("length =%d", byteArray.length);
-      document.getElementById("process").innerHTML+="process filename :"+filename + "len="+byteArray.length+"</br>";
-
-			//for (var i = 0; i < 32; i++) {
-			//	// do something with each byte in the array
-      //  console.log("%d=%d", i, byteArray[i]);
-      //}
+window.currentArray = new Object();
+function logArray() {
+  window.currentArray=TableTTFs.OS2Table;
+    document.getElementById("process").innerHTML+= "currentArray length =" + window.currentArray.length + "<br>";
+    for (var i = 0; i < 10 && i < window.currentArray.length; i++) {
+      document.getElementById("process").innerHTML+= "currentArray "+i+ "=" + window.currentArray[i]+"&nbsp&nbsp&nbsp&nbsp";
     }
-  };
-
-  oReq.send(null);
+    document.getElementById("process").innerHTML+= "<br>";
 }
 
-function logArray(testArray) {
-    console.log("length =%d", testArray.length);
-    document.getElementById("process").innerHTML+= "test array length =" + testArray.length + "<br>";
-    for (var i = 0; i < 32 && i < testArray.length; i++) {
-      console.log("%d=%d", i, testArray[i]);
-      document.getElementById("process").innerHTML+= "test array "+i+ "=" + testArray[i]+"<br>";
-    }
-}
-
-function waitForFile(testArray) {
-  i = 0;
-  while (isNaN(testArray.length) || testArray.length > 0) {
-    console.log("wait %d=%d",i, testArray.length);
-    i++;
-    if (i>1000) {
-      break;
-    }
-  }
-}
 </script>
 
 <h1>Convert WOFF to OTF online</h1>
@@ -158,11 +128,12 @@ function waitForFile(testArray) {
   </span> / <span id="bytesTotal"></span> 
 </div> 
 </section>
-<button onclick="logArray(window.ttfFileArray)">点击这里</button>
-<script> 
-readUrlBinary("test.ttf");
-readUrlBinary("menlo.ttf");
-</script>
+<button onclick="logArray()">点击这里</button>
 <p id="process"> process...</br></p>
+<script>
+document.getElementById("process").innerHTML+= "test a+b = "+add(11111,2)+"<br>";
+document.getElementById("process").innerHTML+= "TableTTFs id = " + TableTTFs.Id + "<br>";
+readUrlBinary("data/HeadInfo/OS2Table", TableTTFs);
+</script>
 </body>
 </html>
