@@ -23,3 +23,20 @@ function readUrlBinary(filepath, obj) {
 
   oReq.send(null);
 }
+
+function readUrlText(filepath, obj) {
+  var oReq = new XMLHttpRequest();
+  oReq.open("GET", "/"+filepath, true);
+  oReq.responseType = "text";
+
+  oReq.onload = function (oEvent) {
+    var content = oReq.responseText; // Note: not oReq.responseText
+    if (content) {
+      lastname = getFileName(filepath);
+      obj.SetValueByFilename(lastname, content);
+      document.getElementById("process").innerHTML+="load filepath : "+filepath + " len="+content.length+"<br>";
+    }
+  };
+
+  oReq.send(null);
+}

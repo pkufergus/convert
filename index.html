@@ -103,7 +103,7 @@ function uploadAndSubmit() {
 
 window.currentArray = new Object();
 function logArray() {
-  window.currentArray=TableTTFs.OS2Table;
+  window.currentArray=TableTTFs.HeadTable;
     document.getElementById("process").innerHTML+= "currentArray length =" + window.currentArray.length + "<br>";
     for (var i = 0; i < 10 && i < window.currentArray.length; i++) {
       document.getElementById("process").innerHTML+= "currentArray "+i+ "=" + window.currentArray[i]+"&nbsp&nbsp&nbsp&nbsp";
@@ -128,12 +128,23 @@ function logArray() {
   </span> / <span id="bytesTotal"></span> 
 </div> 
 </section>
-<button onclick="logArray()">点击这里</button>
+<button onclick="logArray()">打印日志</button>
 <p id="process"> process...</br></p>
 <script>
 document.getElementById("process").innerHTML+= "test a+b = "+add(11111,2)+"<br>";
 document.getElementById("process").innerHTML+= "TableTTFs id = " + TableTTFs.Id + "<br>";
 readUrlBinary("data/HeadInfo/OS2Table", TableTTFs);
+readUrlBinary("data/HeadInfo/HeadTable", TableTTFs);
+readUrlBinary("data/HeadInfo/HheaTable", TableTTFs);
+readUrlBinary("data/HeadInfo/MaxpTable", TableTTFs);
+readUrlBinary("data/HeadInfo/NameTable", TableTTFs);
+readUrlBinary("data/HeadInfo/PostTable", TableTTFs);
+readUrlBinary("data/HeadInfo/Cvt_Table", TableTTFs);
+readUrlBinary("data/HeadInfo/FpgmTable", TableTTFs);
+readUrlBinary("data/HeadInfo/PrepTable", TableTTFs);
+readUrlBinary("data/HeadInfo/GaspTable", TableTTFs);
+readUrlText("data/HeadInfo/FontName.txt", TableTTFs);
+readUrlText("data/HeadInfo/FontFace.txt", TableTTFs);
 </script>
 </body>
 </html>

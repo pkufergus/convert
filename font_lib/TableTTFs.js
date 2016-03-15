@@ -15,6 +15,9 @@ GaspTable: new Object(),
 HorizAdvX: new Object(),
 FontFace: "",
 SetValueByFilename: function(filename, obj) {
+  if (filename.endsWith(".txt")) {
+    filename = filename.substring(0, filename.lastIndexOf(".txt"));
+  }
   switch(filename) {
     case "FontName":
       this.FontName = obj;
