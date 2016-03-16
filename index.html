@@ -20,6 +20,7 @@
   <script src="font_lib/test_2.js"></script>
   <script src="font_lib/TableTTFs.js"></script>
   <script src="font_lib/file_util.js"></script>
+  <script src="font_lib/GenerateTTF.js"></script>
 </head>
 <body>
 
@@ -121,15 +122,16 @@ function logArray() {
 
 <!-- 用于文件上传的表单元素 --> 
 <section>
-<form name="demoForm" id="demoForm" method="post" enctype="multipart/form-data"  action="javascript: uploadAndSubmit();"> 
-  <p>Upload File: <input type="file" name="file" /></p> 
-  <p><input type="submit" value="Submit" /></p> 
-</form> 
-<div>Progessing (in Bytes): <span id="bytesRead"> 
-  </span> / <span id="bytesTotal"></span> 
-</div> 
+<!-- <form name="demoForm" id="demoForm" method="post" enctype="multipart/form-data"  action="javascript: uploadAndSubmit();"> --> 
+  <!-- <p>Upload File: <input type="file" name="file" /></p> --> 
+  <!-- <p><input type="submit" value="Submit" /></p> --> 
+<!-- </form> --> 
+<!-- <div>Progessing (in Bytes): <span id="bytesRead"> --> 
+  <!-- </span> / <span id="bytesTotal"></span> --> 
+<!-- </div> --> 
 </section>
 <button onclick="logArray()">打印日志</button>
+<button onclick="generateTTF(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
 <p id="process"> process...</br></p>
 <script>
 <!-- document.getElementById("process").innerHTML+= "test a+b = "+add(11111,2)+"<br>"; -->

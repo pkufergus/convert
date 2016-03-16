@@ -1,8 +1,15 @@
 
+function Println(msg) {
+  document.getElementById("process").innerHTML+="log : "+msg+" <br>";
+}
+function Log(msg) {
+  console.log(msg);
+}
+
 function getFileName(o){
   var pos=o.lastIndexOf("/");
   lastname = o.substring(pos+1);
-  document.getElementById("process").innerHTML+="pos =" + pos + " lastname = " + lastname + "<br>";
+  Log("pos =" + pos + " lastname = " + lastname);
   return lastname;
 }
 
@@ -17,7 +24,7 @@ function readUrlBinary(filepath, obj) {
       var byteArray = new Uint8Array(arrayBuffer);
       lastname = getFileName(filepath);
       obj.SetValueByFilename(lastname, byteArray);
-      document.getElementById("process").innerHTML+="load filepath : "+filepath + " len="+byteArray.length+"<br>";
+      Log("load filepath : "+filepath + " len="+byteArray.length);
     }
   };
 
@@ -34,9 +41,10 @@ function readUrlText(filepath, obj) {
     if (content) {
       lastname = getFileName(filepath);
       obj.SetValueByFilename(lastname, content);
-      document.getElementById("process").innerHTML+="load filepath : "+filepath + " = " + content + " len="+content.length+"<br>";
+      Log("load filepath : "+filepath + " = " + content + " len="+content.length);
     }
   };
 
   oReq.send(null);
 }
+
