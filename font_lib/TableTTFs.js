@@ -68,14 +68,14 @@ SetValueByFilename: function(filename, obj) {
 });
 
 function TableGlyfs() {
-  this.Id : 121;
-  this.Unicode : 0;
-  this.GlyfTable: new Object();
-  this.LSB : 0;
-  this.HorizAdvX : 0;
-  this.SVGPath : "";
+  this.Id = 0;
+  this.Unicode = 0;
+  this.GlyfTable = new Object();
+  this.LSB = 0;
+  this.HorizAdvX = 0;
+  this.SVGPath = "";
 }
-var TableGlyfs = new Object({
+TableGlyfs.prototype = {
 SetValueByFilename: function(filename, obj) {
   if (filename.endsWith(".txt")) {
     filename = filename.substring(0, filename.lastIndexOf(".txt"));
@@ -97,4 +97,4 @@ SetValueByFilename: function(filename, obj) {
       console.log("unknown filename");
   }
 }
-});
+};

@@ -152,12 +152,14 @@ var fonts = new Array("中", "之", "凤", "国");
 TableGlyfsList = new Array(fonts.length)
 
 var i = 0
-for (font in fonts) {
+for (i = 0; i< fonts.length; i++) {
+  font=fonts[i];
+  document.getElementById("process").innerHTML+= "font="+font+"<br>";
+  TableGlyfsList[i] = new TableGlyfs();
   readUrlText("data/FontInfo/"+ font + "/Unicode.txt", TableGlyfsList[i]);
   readUrlBinary("data/FontInfo/" + font + "/GlyfTable", TableGlyfsList[i]);
   readUrlText("data/FontInfo/" + font + "/LSB.txt", TableGlyfsList[i]);
   readUrlText("data/FontInfo/" + font + "/HorizAdvX.txt", TableGlyfsList[i]);
-  i++;
 }
 </script>
 </body>
