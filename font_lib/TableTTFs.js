@@ -1,3 +1,8 @@
+var Err = new Object({
+number : 0,
+msg :""
+});
+
 var TableTTFs = new Object({
 Id : 121,
 FontName: "",
