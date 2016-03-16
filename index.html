@@ -17,6 +17,7 @@
   <!-- <script src="file_util.js"></script> -->
   <script src="ttf2woff.js"></script>
   <script src="font_lib/test.js"></script>
+  <script src="font_lib/test_2.js"></script>
   <script src="font_lib/TableTTFs.js"></script>
   <script src="font_lib/file_util.js"></script>
 </head>
@@ -131,7 +132,7 @@ function logArray() {
 <button onclick="logArray()">打印日志</button>
 <p id="process"> process...</br></p>
 <script>
-document.getElementById("process").innerHTML+= "test a+b = "+add(11111,2)+"<br>";
+<!-- document.getElementById("process").innerHTML+= "test a+b = "+add(11111,2)+"<br>"; -->
 document.getElementById("process").innerHTML+= "TableTTFs id = " + TableTTFs.Id + "<br>";
 readUrlBinary("data/HeadInfo/OS2Table", TableTTFs);
 readUrlBinary("data/HeadInfo/HeadTable", TableTTFs);
@@ -145,6 +146,19 @@ readUrlBinary("data/HeadInfo/PrepTable", TableTTFs);
 readUrlBinary("data/HeadInfo/GaspTable", TableTTFs);
 readUrlText("data/HeadInfo/FontName.txt", TableTTFs);
 readUrlText("data/HeadInfo/FontFace.txt", TableTTFs);
+
+
+var fonts = new Array("中", "之", "凤", "国");
+TableGlyfsList = new Array(fonts.length)
+
+var i = 0
+for (font in fonts) {
+  readUrlText("data/FontInfo/"+ font + "/Unicode.txt", TableGlyfsList[i]);
+  readUrlBinary("data/FontInfo/" + font + "/GlyfTable", TableGlyfsList[i]);
+  readUrlText("data/FontInfo/" + font + "/LSB.txt", TableGlyfsList[i]);
+  readUrlText("data/FontInfo/" + font + "/HorizAdvX.txt", TableGlyfsList[i]);
+  i++;
+}
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 var TableTTFs = new Object({
-Id : 0,
+Id : 121,
 FontName: "",
 OS2Table: new Object(),
 HeadTable: new Object(),
@@ -61,6 +61,38 @@ SetValueByFilename: function(filename, obj) {
     case "FontFace":
       this.FontFace = obj;
       break;
+    default:
+      console.log("unknown filename");
+  }
+}
+});
+
+function TableGlyfs() {
+  this.Id : 121;
+  this.Unicode : 0;
+  this.GlyfTable: new Object();
+  this.LSB : 0;
+  this.HorizAdvX : 0;
+  this.SVGPath : "";
+}
+var TableGlyfs = new Object({
+SetValueByFilename: function(filename, obj) {
+  if (filename.endsWith(".txt")) {
+    filename = filename.substring(0, filename.lastIndexOf(".txt"));
+  }
+  switch(filename) {
+    case "Id":
+      this.Id = obj; break;
+    case "Unicode":
+      this.Unicode = parseInt(obj); break;
+    case "GlyfTable":
+      this.GlyfTable = obj; break;
+    case "LSB":
+      this.LSB = parseInt(obj); break;
+    case "HorizAdvX":
+      this.HorizAdvX = parseInt(obj); break;
+    case "SVGPath":
+      this.SVGPath = obj; break;
     default:
       console.log("unknown filename");
   }

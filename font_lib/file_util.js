@@ -34,7 +34,7 @@ function readUrlText(filepath, obj) {
     if (content) {
       lastname = getFileName(filepath);
       obj.SetValueByFilename(lastname, content);
-      document.getElementById("process").innerHTML+="load filepath : "+filepath + " len="+content.length+"<br>";
+      document.getElementById("process").innerHTML+="load filepath : "+filepath + " = " + content + " len="+content.length+"<br>";
     }
   };
 
