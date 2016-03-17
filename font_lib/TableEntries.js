@@ -1,0 +1,3 @@
+
+function createCMapTable(glyfList){
+}

@@ -8,6 +8,11 @@ var SIZEOF = {
   TTF_TABLE_ENTRY: 16
 };
 
+function createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err){
+  ttfTableEntryList = new Array();
+
+}
+
 function generateTTF(TableTTFs, glyfList, Err) {
   Println("SIZEOF SFNT_TABLE_ENTRY="+SIZEOF.TTF_TABLE_ENTRY);
   Println("glyfList length="+glyfList.length);
