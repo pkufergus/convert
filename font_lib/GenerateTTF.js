@@ -9,8 +9,12 @@ var SIZEOF = {
 };
 
 function createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err){
+  Println("createTableEntryList start ... ");
   ttfTableEntryList = new Array();
+  TableEntriesModule.createCMapTable(glyfList);
 
+  Println("createTableEntryList end!");
+  return ttfTableEntryList;
 }
 
 function generateTTF(TableTTFs, glyfList, Err) {
