@@ -8,34 +8,43 @@ var SIZEOF = {
   TTF_TABLE_ENTRY: 16
 };
 
-function createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err){
+function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err){
   Println("createTableEntryList start ... ");
   ttfTableEntryList = new Array();
-  var cmapArray = CmapModule.createCMapTable(glyfList);
-  var locaArray = LocaModule.createLocaTable(glyfList, glyfTotalSize);
+  var cmapArray = CmapModule.createCMapTable(glyfsList);
+  var locaArray = LocaModule.createLocaTable(glyfsList, glyfsTotalSize);
+  var glyfsArray = new Uint8Array(glyfsTotalSize);
+
+  var offset = 0;
+  for (n in glyfsList) {
+    if (glyfsList[n] != null && typeof(glyfsList[n].GlyfTable) != 'undefined') {
+      glyfsArray.set(glyfsList[n].GlyfTable, offset);
+      offset += glyfsList[n].GlyfTable.length;
+    }
+  }
 
   Println("createTableEntryList end!");
   return ttfTableEntryList;
 }
 
-function generateTTF(TableTTFs, glyfList, Err) {
+function generateTTF(TableTTFs, glyfsList, Err) {
   Println("SIZEOF SFNT_TABLE_ENTRY="+SIZEOF.TTF_TABLE_ENTRY);
-  Println("glyfList length="+glyfList.length);
-  glyfList = glyfList.sort(function(a,b) {
+  Println("glyfsList length="+glyfsList.length);
+  glyfsList = glyfsList.sort(function(a,b) {
     var aVal = parseInt(a.Unicode);
     var bVal = parseInt(b.Unicode);
     return aVal == bVal ? 0  : aVal < bVal ? -1 : 1;
   }
   );
-  glyfTotalSize = 0;
-  for (x in glyfList) {
-    if (typeof(glyfList[x].GlyfTable.length) !== 'undefined' && glyfList[x].GlyfTable.length >= 0 ) {
-      glyfTotalSize += glyfList[x].GlyfTable.length;
+  glyfsTotalSize = 0;
+  for (x in glyfsList) {
+    if (typeof(glyfsList[x].GlyfTable.length) !== 'undefined' && glyfsList[x].GlyfTable.length >= 0 ) {
+      glyfsTotalSize += glyfsList[x].GlyfTable.length;
     }
   }
-  Println("glyfTotalSize= "+glyfTotalSize);
-  if (glyfTotalSize <= 0) {
-    Println("glyfTotalSize= "+glyfTotalSize);
+  Println("glyfsTotalSize= "+glyfsTotalSize);
+  if (glyfsTotalSize <= 0) {
+    Println("glyfsTotalSize= "+glyfsTotalSize);
     Println("parameter error");
     return;
   }
@@ -51,7 +60,7 @@ function generateTTF(TableTTFs, glyfList, Err) {
   var offset = headerSize;
 
   ttfTableEntryList = new Array();
-  ttfTableEntryList = createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err);
+  ttfTableEntryList = createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err);
   for (x in ttfTableEntryList) {
     bufSize += ttfTableEntryList[x].m_CorLength;
   }
