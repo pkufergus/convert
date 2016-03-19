@@ -1,3 +1,5 @@
-function add_2222(a, b) {
-  return a*b;
+
+function test_test() {
+for(i in TAG)
+  Println(TAG[i].toString(16));
 }

@@ -7,8 +7,8 @@ var LocaModule = (function(){
     return result;
   }
 
-  Module.createLocaTable = function(glyfsList){
-    var isShortFormat = glyfTotalSize < 0x20000;
+  Module.createLocaTable = function(glyfsList, glyfsTotalSize){
+    var isShortFormat = glyfsTotalSize < 0x20000;
     var tableSize = countTableSize(glyfsList, isShortFormat);
     var locaArray = new Uint8Array(tableSize);
     var locaDataView = new DataView(locaArray.buffer);

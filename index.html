@@ -23,6 +23,7 @@
   <script src="font_lib/GenerateTTF.js"></script>
   <script src="font_lib/TableCmap.js"></script>
   <script src="font_lib/TableLoca.js"></script>
+  <script src="font_lib/TableHhea.js"></script>
 </head>
 <body>
 
@@ -136,7 +137,6 @@ function logArray() {
 <button onclick="generateTTF(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
 <p id="process"> process...</br></p>
 <script>
-<!-- document.getElementById("process").innerHTML+= "test a+b = "+add(11111,2)+"<br>"; -->
 document.getElementById("process").innerHTML+= "TableTTFs id = " + TableTTFs.Id + "<br>";
 readUrlBinary("data/HeadInfo/OS2Table", TableTTFs);
 readUrlBinary("data/HeadInfo/HeadTable", TableTTFs);
@@ -165,6 +165,8 @@ for (i = 0; i< fonts.length; i++) {
   readUrlText("data/FontInfo/" + font + "/LSB.txt", TableGlyfsList[i]);
   readUrlText("data/FontInfo/" + font + "/HorizAdvX.txt", TableGlyfsList[i]);
 }
+
+test_test();
 </script>
 </body>
 </html>

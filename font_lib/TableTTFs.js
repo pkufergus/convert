@@ -103,3 +103,12 @@ SetValueByFilename: function(filename, obj) {
   }
 }
 };
+
+function TableEntry() {
+  this.m_Tag = 0;
+  this.m_CheckSum = 0;
+  this.m_Offset = 0;
+  this.m_Length = 0;
+  this.m_CorLength = 0;
+  this.m_DataBytes = new Uint8Array();
+}
