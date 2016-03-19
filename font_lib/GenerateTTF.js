@@ -11,7 +11,8 @@ var SIZEOF = {
 function createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err){
   Println("createTableEntryList start ... ");
   ttfTableEntryList = new Array();
-  TableEntriesModule.createCMapTable(glyfList);
+  var cmapArray = CmapModule.createCMapTable(glyfList);
+  //var locaArray = LocalModule.createLocaTable(glyfList, glyfTotalSize);
 
   Println("createTableEntryList end!");
   return ttfTableEntryList;
@@ -20,6 +21,12 @@ function createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err){
 function generateTTF(TableTTFs, glyfList, Err) {
   Println("SIZEOF SFNT_TABLE_ENTRY="+SIZEOF.TTF_TABLE_ENTRY);
   Println("glyfList length="+glyfList.length);
+  glyfList = glyfList.sort(function(a,b) {
+    var aVal = parseInt(a.Unicode);
+    var bVal = parseInt(b.Unicode);
+    return aVal == bVal ? 0  : aVal < bVal ? -1 : 1;
+  }
+  );
   glyfTotalSize = 0;
   for (x in glyfList) {
     if (typeof(glyfList[x].GlyfTable.length) !== 'undefined' && glyfList[x].GlyfTable.length >= 0 ) {
@@ -27,6 +34,11 @@ function generateTTF(TableTTFs, glyfList, Err) {
     }
   }
   Println("glyfTotalSize= "+glyfTotalSize);
+  if (glyfTotalSize <= 0) {
+    Println("glyfTotalSize= "+glyfTotalSize);
+    Println("parameter error");
+    return;
+  }
   tablesum = 10;
   if (typeof(TableTTFs.FpgmTable.length) == "undefined" || TableTTFs.FpgmTable.length <= 0) {
     tablesum = 10;

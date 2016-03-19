@@ -22,6 +22,7 @@
   <script src="font_lib/file_util.js"></script>
   <script src="font_lib/TableEntries.js"></script>
   <script src="font_lib/GenerateTTF.js"></script>
+  <script src="font_lib/TableCmap.js"></script>
 </head>
 <body>
 
@@ -151,7 +152,7 @@ readUrlText("data/HeadInfo/FontName.txt", TableTTFs);
 readUrlText("data/HeadInfo/FontFace.txt", TableTTFs);
 
 
-var fonts = new Array("中", "之", "凤", "国");
+var fonts = new Array("中", "凤", "国", "A", "B", "之", "大", "大2");
 TableGlyfsList = new Array(fonts.length)
 
 var i = 0
