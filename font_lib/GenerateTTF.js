@@ -12,7 +12,7 @@ function createTableEntryList(TableTTFs, glyfList, offset, glyfTotalSize, Err){
   Println("createTableEntryList start ... ");
   ttfTableEntryList = new Array();
   var cmapArray = CmapModule.createCMapTable(glyfList);
-  //var locaArray = LocalModule.createLocaTable(glyfList, glyfTotalSize);
+  var locaArray = LocaModule.createLocaTable(glyfList, glyfTotalSize);
 
   Println("createTableEntryList end!");
   return ttfTableEntryList;
