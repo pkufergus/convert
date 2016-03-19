@@ -6,9 +6,68 @@ var TableEntriesModule = (function(){
   var Seg2BytesBound = 0xFFFF;
   var Seg4BytesBound = 0xFFFFFFFF;
 
+  function Segment() {
+    this.start = 0;
+    this.end = 0;
+    this.delta = 0;
+  }
+  Segment.prototype = {
+    toString: function() {
+      return "rang =<"+start+" "+end +">"+"delta="+delta+" ";
+    }
+  }
+
+  function encodeDelta(delta) {
+    return delta > 0x7FFF ? delta - 0x10000 : (delta < -0x7FFF ? delta + 0x10000 : delta);
+  }
+
   function getSegments(glyfsList, bound) {
     segments = new Array();
-    return segments; 
+    int delta = 0;
+    var prevCode = -1;
+    var prevDelta = -1;
+    segment = new Segment();
+    var prevEndCode = 0;
+
+    for (n in glyfsList) {
+      Unicode = glyfsList[n].Unicode;
+      if (Unicode < 0 || Unicode > bound) {
+        break;
+      }
+      if (prevCode < 0) {
+        segment.start = Unicode;
+      } else {
+        if (Unicode != prevCode + 1) {
+          segment.end = prevCode;
+          delta = prevEndCode - segment.start + prevDelta + 1;
+          segment.delta = encodeDelta(delta);
+          prevEndCode = segment.end;
+          prevDelta = delta;
+          segments.push(segment);
+          segment = new  Segment();
+          segment.start = Unicode;
+        }
+      }
+      prevCode = Unicode;
+    }
+    if (prevCode > 0) {
+      segment.end = prevCode;
+      delta = prevEndCode - segment.start + prevDelta + 1;
+      segment.delta = encodeDelta(delta);
+      segments.push(segment);
+    }
+    return segments;
+  }
+  function showSegments(segs) {
+    for (n int segs) {
+      Println("n="+n+" : "+segs[n].toString());
+    }
+  }
+  function createSubTable0(glyfsList){
+  }
+  function createSubTable4(glyfsList,segments2bytes){
+  }
+  function createSubTable12(segments4bytes){
   }
 
   Module.createCMapTable = function(glyfsList){
@@ -26,8 +85,15 @@ var TableEntriesModule = (function(){
     }
     Println("hasGLyphsOver2Bytes = " + hasGLyphsOver2Bytes);
     var segments4bytes = hasGLyphsOver2Bytes ? getSegments(glyfsList, Seg4BytesBound) : null; //get segments for all icodes
-    Log("segments2bytes len = " + segments2bytes.length);
-    Log("segments4bytes len = " + (segments4bytes == null ? -1 : segments4bytes.length));
+    Println("segments2bytes len = " + segments2bytes.length);
+    Println("segments4bytes len = " + (segments4bytes == null ? -1 : segments4bytes.length));
+
+    showSegments(segments2bytes);
+    showSegments(segments4bytes);
+    // Create subtables first.
+    var subTable0 = createSubTable0(glyfsList); // subtable 0
+    var subTable4 = createSubTable4(glyfsList, segments2bytes); // subtable 4
+    var subTable12 = segments4bytes != null ? createSubTable12(segments4bytes) : null; // subtable 12
 
     return cmapArray;
   }
