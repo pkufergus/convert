@@ -1,23 +1,3 @@
-function getUint16_Array(array) {
-  var view = new DataView(array.buffer);
-  return view.getUint16(0);
-}
-
-function getUint16_Array(array, offset) {
-  var view = new DataView(array.buffer);
-  return view.getUint16(offset);
-}
-
-function getUint32_Array(array) {
-  var view = new DataView(array.buffer);
-  return view.getUint32(0);
-}
-
-function getUint32_Array(array, offset) {
-  var view = new DataView(array.buffer);
-  return view.getUint32(offset);
-}
-
 function zlib_decompress(buffer) {
   var inflate = new pako.Inflate();
   inflate.push(new Uint8Array(buffer), true);
@@ -48,7 +28,7 @@ function longAlign(n) {
 
 function calc_checksum(buf) {
   var sum = 0;
-  var nlongs = buf.length / 4;
+  var nlongs = parseInt(buf.length / 4);
 
   for (var i = 0; i < nlongs; ++i) {
     var t = getUint32_Array(buf, i * 4);

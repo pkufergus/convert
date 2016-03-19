@@ -48,3 +48,35 @@ function readUrlText(filepath, obj) {
   oReq.send(null);
 }
 
+function DataViewWrite1(dataView, offset, val) {
+  dataView.setUint8(offset, val);
+  return offset + 1;
+}
+function DataViewWrite2(dataView, offset, val) {
+  dataView.setUint16(offset, val);
+  return offset + 2;
+}
+function DataViewWrite4(dataView, offset, val) {
+  dataView.setUint4(offset, val);
+  return offset + 4;
+}
+
+function getUint16_Array(array) {
+  var view = new DataView(array.buffer);
+  return view.getUint16(0);
+}
+
+function getUint16_Array(array, offset) {
+  var view = new DataView(array.buffer);
+  return view.getUint16(offset);
+}
+
+function getUint32_Array(array) {
+  var view = new DataView(array.buffer);
+  return view.getUint32(0);
+}
+
+function getUint32_Array(array, offset) {
+  var view = new DataView(array.buffer);
+  return view.getUint32(offset);
+}

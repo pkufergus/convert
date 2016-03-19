@@ -50,6 +50,17 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	offset += hhea.m_CorLength;
   ttfTableEntryList.push(hhea);
 
+  //head
+  var head = new TableEntry();
+  head.m_Tag = TAG.HEAD;
+  head.m_DataBytes = HeadModule.createHeadTable(glyfsList, glyfsTotalSize, TableTTFs.HeadTable);
+  head.m_CheckSum = calc_checksum(head.m_DataBytes);
+  head.m_Offset = offset;
+  head.m_Length = head.m_DataBytes.length;
+  head.m_CorLength = head.m_Length + (4 - head.m_Length % 4) % 4;
+  offset += head.m_CorLength;
+  ttfTableEntryList.push(head);
+
   Println("createTableEntryList end!");
   return ttfTableEntryList;
 }
