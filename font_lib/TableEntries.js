@@ -13,7 +13,7 @@ var TableEntriesModule = (function(){
   }
   Segment.prototype = {
     toString: function() {
-      return "rang =<"+start+" "+end +">"+"delta="+delta+" ";
+      return "rang =<"+this.start+" "+this.end +">"+"delta="+this.delta+" ";
     }
   }
 
@@ -23,7 +23,7 @@ var TableEntriesModule = (function(){
 
   function getSegments(glyfsList, bound) {
     segments = new Array();
-    int delta = 0;
+    var delta = 0;
     var prevCode = -1;
     var prevDelta = -1;
     segment = new Segment();
@@ -59,7 +59,7 @@ var TableEntriesModule = (function(){
     return segments;
   }
   function showSegments(segs) {
-    for (n int segs) {
+    for (n in segs) {
       Println("n="+n+" : "+segs[n].toString());
     }
   }
