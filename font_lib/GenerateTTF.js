@@ -355,10 +355,18 @@ function generateTTF(TableTTFs, glyfsList, Err) {
   return ttfArray;
 }
 
+var count_file = 1;
 function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
   var ttfArray = generateTTF(TableTTFs, TableGlyfsList, Err);
   var container = document.getElementById('fonts');
   var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
-  link.textContent = link.download = "test.ttf";
+  link.textContent = link.download = "test"+ count_file + ".ttf";
   link.href = buffer2url_woff(ttfArray);
+
+  var woffArray = Ttf2WoffModule.ttf2woff(ttfArray.buffer, Err); 
+  container = document.getElementById('fonts');
+  link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+  link.textContent = link.download = "test" + count_file + ".woff";
+  link.href = buffer2url_woff(woffArray);
+  count_file++;
 }
