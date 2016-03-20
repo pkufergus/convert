@@ -3,74 +3,76 @@ number : 0,
 msg :""
 });
 
-var TableTTFs = new Object({
-Id : 121,
-FontName: "",
-OS2Table: new Uint8Array(),
-HeadTable: new Uint8Array(),
-HheaTable: new Uint8Array(),
-HmtxTable: new Uint8Array(),
-MaxpTable: new Uint8Array(),
-NameTable: new Uint8Array(),
-PostTable: new Uint8Array(),
-Cvt_Table: new Uint8Array(),
-FpgmTable: new Uint8Array(),
-PrepTable: new Uint8Array(),
-GaspTable: new Uint8Array(),
-HorizAdvX: 9,
-FontFace: "",
-SetValueByFilename: function(filename, obj) {
-  if (filename.endsWith(".txt")) {
-    filename = filename.substring(0, filename.lastIndexOf(".txt"));
-  }
-  switch(filename) {
-    case "FontName":
-      this.FontName = obj;
-      break;
-    case "OS2Table":
-      this.OS2Table = obj;
-      break;
-    case "HeadTable":
-      this.HeadTable = obj;
-      break;
-    case "HheaTable":
-      this.HheaTable = obj;
-      break;
-    case "HmtxTable":
-      this.HmtxTable = obj;
-      break;
-    case "MaxpTable":
-      this.MaxpTable = obj;
-      break;
-    case "NameTable":
-      this.NameTable = obj;
-      break;
-    case "PostTable":
-      this.PostTable = obj;
-      break;
-    case "Cvt_Table":
-      this.Cvt_Table = obj;
-      break;
-    case "FpgmTable":
-      this.FpgmTable = obj;
-      break;
-    case "PrepTable":
-      this.PrepTable = obj;
-      break;
-    case "GaspTable":
-      this.GaspTable = obj;
-      break;
-    case "HorizAdvX":
-      this.HorizAdvX = obj;
-      break;
-    case "FontFace":
-      this.FontFace = obj;
-      break;
-    default:
-      console.log("unknown filename");
-  }
+function TableTTFsClass() {
+  this.Id = 1,
+  this.FontName= "",
+  this.OS2Table= new Uint8Array(),
+  this.HeadTable= new Uint8Array(),
+  this.HheaTable= new Uint8Array(),
+  this.HmtxTable= new Uint8Array(),
+  this.MaxpTable= new Uint8Array(),
+  this.NameTable= new Uint8Array(),
+  this.PostTable= new Uint8Array(),
+  this.Cvt_Table= new Uint8Array(),
+  this.FpgmTable= new Uint8Array(),
+  this.PrepTable= new Uint8Array(),
+  this.GaspTable= new Uint8Array(),
+  this.HorizAdvX= 9,
+  this.FontFace= ""
 }
-});
+TableTTFsClass.prototype = {
+  SetValueByFilename: function(filename, obj) {
+    if (filename.endsWith(".txt")) {
+      filename = filename.substring(0, filename.lastIndexOf(".txt"));
+    }
+    switch(filename) {
+      case "FontName":
+        this.FontName = obj;
+        break;
+      case "OS2Table":
+        this.OS2Table = obj;
+        break;
+      case "HeadTable":
+        this.HeadTable = obj;
+        break;
+      case "HheaTable":
+        this.HheaTable = obj;
+        break;
+      case "HmtxTable":
+        this.HmtxTable = obj;
+        break;
+      case "MaxpTable":
+        this.MaxpTable = obj;
+        break;
+      case "NameTable":
+        this.NameTable = obj;
+        break;
+      case "PostTable":
+        this.PostTable = obj;
+        break;
+      case "Cvt_Table":
+        this.Cvt_Table = obj;
+        break;
+      case "FpgmTable":
+        this.FpgmTable = obj;
+        break;
+      case "PrepTable":
+        this.PrepTable = obj;
+        break;
+      case "GaspTable":
+        this.GaspTable = obj;
+        break;
+      case "HorizAdvX":
+        this.HorizAdvX = obj;
+        break;
+      case "FontFace":
+        this.FontFace = obj;
+        break;
+      default:
+        console.log("unknown filename");
+    }
+  }
+};
 
 function TableGlyfs() {
   this.Id = 0;

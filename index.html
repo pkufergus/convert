@@ -142,6 +142,7 @@ function logArray() {
 <button onclick="generateTTF(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
 <p id="process"> process...</br></p>
 <script>
+var TableTTFs = new TableTTFsClass();
 document.getElementById("process").innerHTML+= "TableTTFs id = " + TableTTFs.Id + "<br>";
 readUrlBinary("data/HeadInfo/OS2Table", TableTTFs);
 readUrlBinary("data/HeadInfo/HeadTable", TableTTFs);
