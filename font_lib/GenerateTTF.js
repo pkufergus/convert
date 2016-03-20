@@ -127,6 +127,39 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	offset += hmtx.m_CorLength;
   ttfTableEntryList.push(hmtx);
 
+	//cmap
+	var cmap = new TableEntry();
+	cmap.m_Tag = TAG.CMAP;
+	cmap.m_DataBytes = cmapArray;
+	cmap.m_CheckSum = calc_checksum(cmapArray);
+	cmap.m_Offset = offset;
+	cmap.m_Length = cmapArray.length;
+	cmap.m_CorLength = cmap.m_Length + (4 - cmap.m_Length % 4) % 4;
+	offset += cmap.m_CorLength;
+  ttfTableEntryList.push(cmap);
+
+	//loca
+	var loca = new TableEntry();
+	loca.m_Tag = TAG.LOCA;
+	loca.m_DataBytes = locaArray;
+	loca.m_CheckSum = calc_checksum(locaArray);
+	loca.m_Offset = offset;
+	loca.m_Length = locaArray.length;
+	loca.m_CorLength = loca.m_Length + (4 - loca.m_Length % 4) % 4;
+	offset += loca.m_CorLength;
+  ttfTableEntryList.push(loca);
+
+	//glyf
+	var glyf = new TableEntry();
+	glyf.m_Tag = TAG.GLYF;
+	glyf.m_DataBytes = glyfsArray;
+	glyf.m_CheckSum = calc_checksum(glyfsArray);
+	glyf.m_Offset = offset;
+	glyf.m_Length = glyfsArray.length;
+	glyf.m_CorLength = glyf.m_Length + (4 - glyf.m_Length % 4) % 4;
+	offset += glyf.m_CorLength;
+  ttfTableEntryList.push(glyf);
+
 	Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");
   return ttfTableEntryList;
