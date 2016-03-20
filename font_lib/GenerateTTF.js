@@ -116,6 +116,17 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	hhea.m_DataBytes = HheaModule.createHheaTable5(hhea.m_DataBytes, TableTTFs.HheaTable, glyfsList, HeadModule.yMax, HeadModule.yMin);
 	hhea.m_CheckSum = calc_checksum(hhea.m_DataBytes);
 
+	//hmtx
+	var hmtx = new TableEntry();
+	hmtx.m_Tag = TAG.HMTX;
+	hmtx.m_DataBytes = HmtxModule.createHmtxTable(glyfsList, TableTTFs.HmtxTable, TableTTFs.HorizAdvX);
+	hmtx.m_CheckSum = calc_checksum(hmtx.m_DataBytes);
+	hmtx.m_Offset = offset;
+	hmtx.m_Length = hmtx.m_DataBytes.length;
+	hmtx.m_CorLength = hmtx.m_Length + (4 - hmtx.m_Length % 4) % 4;
+	offset += hmtx.m_CorLength;
+  ttfTableEntryList.push(hmtx);
+
 	Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");
   return ttfTableEntryList;

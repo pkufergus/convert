@@ -17,7 +17,7 @@ Cvt_Table: new Uint8Array(),
 FpgmTable: new Uint8Array(),
 PrepTable: new Uint8Array(),
 GaspTable: new Uint8Array(),
-HorizAdvX: new Uint8Array(),
+HorizAdvX: 9,
 FontFace: "",
 SetValueByFilename: function(filename, obj) {
   if (filename.endsWith(".txt")) {
