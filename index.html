@@ -139,7 +139,7 @@ function logArray() {
 <!-- </div> --> 
 </section>
 <button onclick="logArray()">打印日志</button>
-<button onclick="generateTTF(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
+<button onclick="generateTTFFile(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
 <p id="process"> process...</br></p>
 <script>
 var TableTTFs = new TableTTFsClass();
@@ -158,7 +158,7 @@ readUrlText("data/HeadInfo/FontName.txt", TableTTFs);
 readUrlText("data/HeadInfo/FontFace.txt", TableTTFs);
 
 
-var fonts = new Array("中", "凤", "国", "A", "B", "之", "大", "大2");
+var fonts = new Array("之", "凤", "国","字","形","文","梅","毛","破","美","舞","行","裂","金","飞","龙");
 TableGlyfsList = new Array(fonts.length)
 
 var i = 0

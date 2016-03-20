@@ -354,3 +354,11 @@ function generateTTF(TableTTFs, glyfsList, Err) {
   Println("bufSize= "+bufSize);
   return ttfArray;
 }
+
+function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
+  var ttfArray = generateTTF(TableTTFs, TableGlyfsList, Err);
+  var container = document.getElementById('fonts');
+  var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+  link.textContent = link.download = "test.ttf";
+  link.href = buffer2url_woff(ttfArray);
+}
