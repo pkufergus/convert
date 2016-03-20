@@ -25,6 +25,36 @@ POST : 0x706f7374,
 PREP : 0x70726570
 }
 
+function ulong(t) {
+  /*jshint bitwise:false*/
+  t &= 0xffffffff;
+  if (t < 0) {
+    t += 0x100000000;
+  }
+  return t;
+}
+function calc_checksum(arr) {
+	var sum = 0;
+	var nlongs = parseInt(arr.length / 4);
+  var arrDataView = new DataView(arr.buffer);
+
+	for (var i = 0; i < nlongs; ++i) {
+		var t = arrDataView.getUint32(i*4);
+
+		sum = ulong(sum + t);
+	}
+  var leftBytes = arr.length - nlongs * 4;
+  if (leftBytes > 0) {
+    var leftRes = 0;
+		for (i = 0; i < 4; i++) {
+			/*jshint bitwise:false*/
+			leftRes = (leftRes << 8) + ((i < leftBytes) ? arrDataView.getUint8(nlongs * 4 + i) : 0);
+		}
+		sum += leftRes;
+  }
+	return sum;
+}
+
 function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err){
   Println("createTableEntryList start ... ");
   ttfTableEntryList = new Array();
@@ -61,6 +91,7 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
   offset += head.m_CorLength;
   ttfTableEntryList.push(head);
 
+  Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");
   return ttfTableEntryList;
 }

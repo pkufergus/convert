@@ -6,18 +6,18 @@ msg :""
 var TableTTFs = new Object({
 Id : 121,
 FontName: "",
-OS2Table: new Object(),
-HeadTable: new Object(),
-HheaTable: new Object(),
-HmtxTable: new Object(),
-MaxpTable: new Object(),
-NameTable: new Object(),
-PostTable: new Object(),
-Cvt_Table: new Object(),
-FpgmTable: new Object(),
-PrepTable: new Object(),
-GaspTable: new Object(),
-HorizAdvX: new Object(),
+OS2Table: new Uint8Array(),
+HeadTable: new Uint8Array(),
+HheaTable: new Uint8Array(),
+HmtxTable: new Uint8Array(),
+MaxpTable: new Uint8Array(),
+NameTable: new Uint8Array(),
+PostTable: new Uint8Array(),
+Cvt_Table: new Uint8Array(),
+FpgmTable: new Uint8Array(),
+PrepTable: new Uint8Array(),
+GaspTable: new Uint8Array(),
+HorizAdvX: new Uint8Array(),
 FontFace: "",
 SetValueByFilename: function(filename, obj) {
   if (filename.endsWith(".txt")) {
@@ -75,7 +75,7 @@ SetValueByFilename: function(filename, obj) {
 function TableGlyfs() {
   this.Id = 0;
   this.Unicode = 0;
-  this.GlyfTable = new Object();
+  this.GlyfTable = new Uint8Array();
   this.LSB = 0;
   this.HorizAdvX = 0;
   this.SVGPath = "";
