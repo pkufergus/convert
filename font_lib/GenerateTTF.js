@@ -25,6 +25,19 @@ POST : 0x706f7374,
 PREP : 0x70726570
 }
 
+var TAG10 = {
+OS2 : 0x4f532f32,
+CMAP : 0x636d6170,
+GLYF : 0x676c7966,
+HEAD : 0x68656164,
+HHEA : 0x68686561,
+HMTX : 0x686d7478,
+LOCA : 0x6c6f6361,
+MAXP : 0x6d617870,
+NAME : 0x6e616d65,
+POST : 0x706f7374
+}
+
 function ulong(t) {
   /*jshint bitwise:false*/
   t &= 0xffffffff;
@@ -32,6 +45,17 @@ function ulong(t) {
     t += 0x100000000;
   }
   return t;
+}
+function getUint(t) {
+	/*jshint bitwise:false*/
+	var r = 0;
+	r = (t & 0xffffffff);
+  if (r < 0) {
+    t = r + 0x100000000;
+  } else {
+		t = r;
+	}
+	return t;
 }
 function calc_checksum(arr) {
 	var sum = 0;
@@ -274,5 +298,59 @@ function generateTTF(TableTTFs, glyfsList, Err) {
   for (x in ttfTableEntryList) {
     bufSize += ttfTableEntryList[x].m_CorLength;
   }
+
+  //create TTF buffer
+  var ttfArray = new Uint8Array(bufSize);
+  var ttfDataView = new DataView(ttfArray.buffer);
+
+  //special constants
+  var entrySelector = Math.floor(Math.log(10) / Math.log(2));
+  var searchRange = Math.pow(2, entrySelector) * 16;
+  var rangeShift = tablesum * 16 - searchRange;
+  var headOffset = 0;
+
+  offset = 0;
+  offset = DataViewWrite4(ttfDataView, offset, TTFMAGIC.VERSION);
+  offset = DataViewWrite2(ttfDataView, offset, tablesum);
+  offset = DataViewWrite2(ttfDataView, offset, searchRange);
+  offset = DataViewWrite2(ttfDataView, offset, entrySelector);
+  offset = DataViewWrite2(ttfDataView, offset, rangeShift);
+
+  var tableOrder = TAG;
+  if (tablesum == 14) {
+    tableOrder = TAG;
+  } else {
+    tableOrder = TAG10;
+  }
+  var i = 0;
+  for (n in tableOrder) {
+    for (t in ttfTableEntryList) {
+      item = ttfTableEntryList[t];
+      if (item.m_Tag == tableOrder[n]) {
+        offset = DataViewWrite4(ttfDataView, offset, item.m_Tag);
+        offset = DataViewWrite4(ttfDataView, offset, item.m_CheckSum);
+        offset = DataViewWrite4(ttfDataView, offset, item.m_Offset);
+        offset = DataViewWrite4(ttfDataView, offset, item.m_Length);
+        break;
+      }
+    }
+  }
+
+  for (t in ttfTableEntryList) {
+    item = ttfTableEntryList[t];
+    if (item.m_Tag == TAG.HEAD) {
+      headOffset = offset;
+    }
+    ttfArray.set(item.m_DataBytes, offset);
+    offset += item.m_DataBytes.length;
+    for (i =item.m_Length; i<item.m_CorLength; i++) {
+      offset = DataViewWrite1(ttfDataView, offset, 0);
+    }
+  }
+  checkSumAdjustment = getUint((TTFMAGIC.CHECKSUM_ADJUSTMENT - calc_checksum(ttfArray)));
+	// Write font checksum (corrected by magic value) into HEAD table
+  DataViewWrite4(ttfDataView, headOffset + 8, checkSumAdjustment);
+
   Println("bufSize= "+bufSize);
+  return ttfArray;
 }
