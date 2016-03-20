@@ -160,6 +160,17 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	offset += glyf.m_CorLength;
   ttfTableEntryList.push(glyf);
 
+	//name
+	var name = new TableEntry();
+	name.m_Tag = TAG.NAME;
+	name.m_DataBytes = new Uint8Array(TableTTFs.NameTable);
+	name.m_CheckSum = calc_checksum(name.m_DataBytes);
+	name.m_Offset = offset;
+	name.m_Length = TableTTFs.NameTable.length;
+	name.m_CorLength = name.m_Length + (4 - name.m_Length % 4) % 4;
+	offset += name.m_CorLength;
+  ttfTableEntryList.push(name);
+
 	Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");
   return ttfTableEntryList;
