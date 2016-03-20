@@ -73,7 +73,7 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	//hhea
 	var hhea = new TableEntry();
 	hhea.m_Tag = TAG.HHEA;
-	hhea.m_DataBytes = HheaModule.createHheaTable();
+	hhea.m_DataBytes = HheaModule.createHheaTable0();
 	hhea.m_Offset = offset;
 	hhea.m_Length = hhea.m_DataBytes.length;
 	hhea.m_CorLength = hhea.m_Length + (4 - hhea.m_Length % 4) % 4;
@@ -101,6 +101,20 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	maxp.m_CorLength = maxp.m_Length + (4 - maxp.m_Length % 4) % 4;
 	offset += maxp.m_CorLength;
   ttfTableEntryList.push(maxp);
+
+	//OS/2
+	var OS2 = new TableEntry();
+	OS2.m_Tag = TAG.OS2;
+	OS2.m_DataBytes = Os2Module.createOs2Table(glyfsList, TableTTFs.OS2Table, HeadModule.yMax, HeadModule.yMin);
+	OS2.m_CheckSum = calc_checksum(OS2.m_DataBytes);
+	OS2.m_Offset = offset;
+	OS2.m_Length = OS2.m_DataBytes.length;
+	OS2.m_CorLength = OS2.m_Length + (4 - OS2.m_Length % 4) % 4;
+	offset += OS2.m_CorLength;
+  ttfTableEntryList.push(OS2);
+	//hhea的数据依赖于head和os/2
+	hhea.m_DataBytes = HheaModule.createHheaTable5(hhea.m_DataBytes, TableTTFs.HheaTable, glyfsList, HeadModule.yMax, HeadModule.yMin);
+	hhea.m_CheckSum = calc_checksum(hhea.m_DataBytes);
 
 	Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");

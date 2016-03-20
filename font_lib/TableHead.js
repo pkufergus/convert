@@ -1,5 +1,9 @@
 var HeadModule = (function(){
   function Module() {
+    this.xMin = 0;
+    this.yMin = 0;
+    this.xMax = 0;
+    this.yMax = 0;
   }
   var tableSize = 54;
   var xMin = 0;
@@ -22,6 +26,10 @@ var HeadModule = (function(){
 		}
     var offset = 0;
 
+    this.xMin = xMin;
+    this.yMin = yMin;
+    this.xMax = xMax;
+    this.yMax = yMax;
     HeadArray.set(HeadTable.slice(0,36));
     offset += 36;
     offset = DataViewWrite2(HeadDataView, offset, xMin);
@@ -34,5 +42,11 @@ var HeadModule = (function(){
     offset = DataViewWrite2(HeadDataView, offset, 0);
 		return HeadArray;
 	}
+  Module.getyMin = function() {
+    return this.yMin;
+  }
+  Module.getyMax = function() {
+    return this.yMax;
+  }
   return Module;
 }());
