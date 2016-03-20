@@ -57,7 +57,7 @@ function DataViewWrite2(dataView, offset, val) {
   return offset + 2;
 }
 function DataViewWrite4(dataView, offset, val) {
-  dataView.setUint4(offset, val);
+  dataView.setUint32(offset, val);
   return offset + 4;
 }
 

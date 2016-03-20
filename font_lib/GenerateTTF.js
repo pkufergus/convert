@@ -91,7 +91,18 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
   offset += head.m_CorLength;
   ttfTableEntryList.push(head);
 
-  Println("ttf table size="+ttfTableEntryList.length);
+	//maxp
+	var  maxp = new TableEntry();
+	maxp.m_Tag = TAG.MAXP;
+	maxp.m_DataBytes = MaxpModule.createMaxpTable(glyfsList, TableTTFs.MaxpTable);
+	maxp.m_CheckSum = calc_checksum(maxp.m_DataBytes);
+	maxp.m_Offset = offset;
+	maxp.m_Length = maxp.m_DataBytes.length;
+	maxp.m_CorLength = maxp.m_Length + (4 - maxp.m_Length % 4) % 4;
+	offset += maxp.m_CorLength;
+  ttfTableEntryList.push(maxp);
+
+	Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");
   return ttfTableEntryList;
 }
