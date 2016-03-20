@@ -5,7 +5,7 @@ var PostModule = (function(){
 
   var nameMap = new Map();
   function createNameMap() {
-    if (nameMap.size == 0|| nameMap.size() == 0) {
+    if (nameMap.size == 0) {
       nameMap.set(0x0000, ".null");
       nameMap.set(0x0020, "space");
       nameMap.set(0x00A0, "space");

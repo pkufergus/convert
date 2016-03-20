@@ -182,6 +182,56 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
 	offset += post.m_CorLength;
   ttfTableEntryList.push(post);
 
+	//9-24日添加-保存灰度色
+	if (TableTTFs.FpgmTable != null && TableTTFs.FpgmTable.length > 0) {
+
+		//cvt_
+		var cvt_ = new TableEntry();
+		cvt_.m_Tag = TAG.CVT_;
+		cvt_.m_DataBytes = new Uint8Array(TableTTFs.Cvt_Table);
+		cvt_.m_CheckSum = calc_checksum(cvt_.m_DataBytes);
+		cvt_.m_Offset = offset;
+		cvt_.m_Length = TableTTFs.Cvt_Table.length;
+		cvt_.m_CorLength = cvt_.m_Length + (4 - cvt_.m_Length % 4) % 4;
+		offset += cvt_.m_CorLength;
+    ttfTableEntryList.push(cvt_);
+
+		//fpgm
+		var fpgm = new TableEntry();
+		fpgm.m_Tag = TAG.FPGM;
+		fpgm.m_DataBytes = new Uint8Array(TableTTFs.FpgmTable);
+		fpgm.m_CheckSum = calc_checksum(fpgm.m_DataBytes);
+		fpgm.m_Offset = offset;
+		fpgm.m_Length = TableTTFs.FpgmTable.length;
+		fpgm.m_CorLength = fpgm.m_Length + (4 - fpgm.m_Length % 4) % 4;
+		offset += fpgm.m_CorLength;
+    ttfTableEntryList.push(fpgm);
+
+		//prep
+		var prep = new TableEntry();
+		prep.m_Tag = TAG.PREP;
+		prep.m_DataBytes = new Uint8Array(TableTTFs.PrepTable);
+		prep.m_CheckSum = calc_checksum(prep.m_DataBytes);
+		prep.m_Offset = offset;
+		prep.m_Length = TableTTFs.PrepTable.length;
+		prep.m_CorLength = prep.m_Length + (4 - prep.m_Length % 4) % 4;
+		offset += prep.m_CorLength;
+    ttfTableEntryList.push(prep);
+
+		//gasp
+		if (TableTTFs.GaspTable == null || TableTTFs.GaspTable.length == 0)   //如果Gasp为空，则添加一个默认的
+			TableTTFs.GaspTable = new Uint8Array([ 0, 1, 0, 1, 255, 255, 0, 10 ]);
+		var gasp = new TableEntry();
+		gasp.m_Tag = TAG.GASP;
+		gasp.m_DataBytes = new Uint8Array(TableTTFs.GaspTable);
+		gasp.m_CheckSum = calc_checksum(gasp.m_DataBytes);
+		gasp.m_Offset = offset;
+		gasp.m_Length = TableTTFs.GaspTable.length;
+		gasp.m_CorLength = gasp.m_Length + (4 - gasp.m_Length % 4) % 4;
+		offset += gasp.m_CorLength;
+    ttfTableEntryList.push(gasp);
+	}
+
 	Println("ttf table size="+ttfTableEntryList.length);
   Println("createTableEntryList end!");
   return ttfTableEntryList;
