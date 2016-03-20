@@ -2,8 +2,7 @@
 <html>
 <head lang="en">
   <meta charset="UTF-8">
-  <title>Convert WOFF to OTF online</title>
-  <link rel=author href="https://arty.name">
+  <title>Convert TTF to WOFF online</title>
   <style>
     html {margin: 0; padding: 0; width: 100%; height: 100%;}
     body {height: 100%; padding: 1em; box-sizing: border-box; max-width: 40em; margin: auto;}
@@ -11,12 +10,9 @@
     a {display: block; margin-top: 1em;}    
     #github {position: absolute; right: .5em; top: -.5em;}
   </style>
-  <script src="pako_deflate.js"></script>
-  <script src="pako_inflate.js"></script>
-  <!-- <script src="woff2otf.js"></script> -->
-  <script src="ttf2woff.js"></script>
-  <script src="font_lib/test.js"></script>
-  <script src="font_lib/test_2.js"></script>
+  <script src="font_lib/pako_deflate.js"></script>
+  <script src="font_lib/pako_inflate.js"></script>
+  <script src="font_lib/ttf2woff.js"></script>
   <script src="font_lib/TableTTFs.js"></script>
   <script src="font_lib/util.js"></script>
   <script src="font_lib/GenerateTTF.js"></script>
@@ -123,10 +119,9 @@ function logArray() {
 
 </script>
 
-<h1>Convert WOFF to OTF online</h1>
-<h2>Drop your files on this page to convert them</h2>
+<h1>Convert TTF to WOFF online</h1>
+<h2>download files from here</h2>
 <section id="fonts"></section>
-<a id="github" href="https://github.com/arty-name/woff2otf">GitHub</a>
 
 <!-- 用于文件上传的表单元素 --> 
 <section>
@@ -138,7 +133,6 @@ function logArray() {
   <!-- </span> / <span id="bytesTotal"></span> --> 
 <!-- </div> --> 
 </section>
-<button onclick="logArray()">打印日志</button>
 <button onclick="generateTTFFile(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
 <p id="process"> process...</br></p>
 <script>
@@ -172,7 +166,6 @@ for (i = 0; i< fonts.length; i++) {
   readUrlText("data/FontInfo/" + font + "/HorizAdvX.txt", TableGlyfsList[i]);
 }
 
-test_test();
 </script>
 </body>
 </html>
