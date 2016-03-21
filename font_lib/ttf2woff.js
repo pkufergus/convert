@@ -92,7 +92,8 @@ var Ttf2WoffModule = (function(){
     SFNT_TABLE_ENTRY: 16
   };
 
-  Module.ttf2woff = function(bufferIn, errorCode) {
+  Module.ttf2woff = function(arrayIn, errorCode) {
+    var bufferIn = arrayIn.buffer;
     var dataViewIn = new DataView(bufferIn);
 
     var version = {
@@ -123,7 +124,7 @@ var Ttf2WoffModule = (function(){
     var i, tableEntry;
 
     for (i = 0; i < numTables; ++i) {
-      var data = new Uint8Array(dataViewIn.buffer, SIZEOF.SFNT_HEADER + i * SIZEOF.SFNT_TABLE_ENTRY, SIZEOF.SFNT_TABLE_ENTRY).slice(0);
+      var data = deepCopyUint8Array(arrayIn, SIZEOF.SFNT_HEADER + i * SIZEOF.SFNT_TABLE_ENTRY, SIZEOF.SFNT_HEADER + i * SIZEOF.SFNT_TABLE_ENTRY + SIZEOF.SFNT_TABLE_ENTRY);
       var dataDataView = new DataView(data.buffer);
 
       tableEntry = {
@@ -152,7 +153,7 @@ var Ttf2WoffModule = (function(){
       ttfTableEntry = entries[i];
 
       if (String.fromCharCode.apply(null, ttfTableEntry.Tag) !== 'head') {
-        var algntable = new Uint8Array(dataViewIn.buffer, ttfTableEntry.Offset, longAlign(ttfTableEntry.Length)).slice();
+        var algntable = deepCopyUint8Array(arrayIn, ttfTableEntry.Offset, ttfTableEntry.Offset+ longAlign(ttfTableEntry.Length));
 
         if (calc_checksum(algntable) !== ttfTableEntry.checkSum) {
           console.error("Checksum error in =[%s]", String.fromCharCode.apply(null, ttfTableEntry.Tag));
@@ -166,7 +167,8 @@ var Ttf2WoffModule = (function(){
     }
 
     var sfntOffset = SIZEOF.SFNT_HEADER + entries.length * SIZEOF.SFNT_TABLE_ENTRY;
-    var csum = calc_checksum (new Uint8Array(dataViewIn.buffer, 0, SIZEOF.SFNT_HEADER).slice());
+    var headerDataArray = deepCopyUint8Array(arrayIn, 0, SIZEOF.SFNT_HEADER);
+    var csum = calc_checksum (headerDataArray);
 
     for (i = 0; i < entries.length; ++i) {
       ttfTableEntry = entries[i];
@@ -189,7 +191,7 @@ var Ttf2WoffModule = (function(){
     for (i = 0; i < entries.length; ++i) {
       ttfTableEntry = entries[i];
 
-      var sfntData = new Uint8Array(dataViewIn.buffer, ttfTableEntry.Offset, ttfTableEntry.Length).slice();
+      var sfntData = deepCopyUint8Array(arrayIn, ttfTableEntry.Offset, ttfTableEntry.Offset+ttfTableEntry.Length);
       var sfntDataView = new DataView(sfntData.buffer);
 
       if (String.fromCharCode.apply(null, tableEntry.Tag) === 'head') {

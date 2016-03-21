@@ -363,7 +363,7 @@ function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
   link.textContent = link.download = "test"+ count_file + ".ttf";
   link.href = buffer2url_woff(ttfArray);
 
-  var woffArray = Ttf2WoffModule.ttf2woff(ttfArray.buffer, Err); 
+  var woffArray = Ttf2WoffModule.ttf2woff(ttfArray, Err); 
   container = document.getElementById('fonts');
   link = container.insertBefore(document.createElement('a'), container.firstElementChild);
   link.textContent = link.download = "test" + count_file + ".woff";

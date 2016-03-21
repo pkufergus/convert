@@ -80,3 +80,17 @@ function getUint32_Array(array, offset) {
   var view = new DataView(array.buffer);
   return view.getUint32(offset);
 }
+
+function deepCopyUint8Array(srcArray, begin, end) {
+  var destArray;
+  var size = end - begin;
+  if (size <= 0) {
+    return new Uint8Array();
+  }
+  destArray = new Uint8Array(size);
+
+  for (var i = begin; i < end && i < srcArray.length; i++) {
+    destArray[i - begin] = srcArray[i];
+  }
+  return destArray;
+}
