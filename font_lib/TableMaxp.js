@@ -10,7 +10,7 @@ var MaxpModule = (function(){
     var offset = 0;
     offset = DataViewWrite4(MaxpDataView, offset, 0x10000); // version
     offset = DataViewWrite2(MaxpDataView, offset, glyfsList.length); // numGlyph
-    MaxpArray.set(MaxpTable.slice(6, tableSize), offset);
+    MaxpArray.set(MaxpTable.subarray(6, tableSize), offset);
 
     return MaxpArray;
   }

@@ -270,7 +270,7 @@ function generateTTF(TableTTFs, glyfsList, Err) {
     return aVal == bVal ? 0  : aVal < bVal ? -1 : 1;
   }
   );
-  glyfsTotalSize = 0;
+  var glyfsTotalSize = 0;
   for (x in glyfsList) {
     if (typeof(glyfsList[x].GlyfTable.length) !== 'undefined' && glyfsList[x].GlyfTable.length >= 0 ) {
       glyfsTotalSize += glyfsList[x].GlyfTable.length;
@@ -369,4 +369,5 @@ function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
   link.textContent = link.download = "test" + count_file + ".woff";
   link.href = buffer2url_woff(woffArray);
   count_file++;
+  return woffArray;
 }

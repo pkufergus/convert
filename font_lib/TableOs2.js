@@ -32,15 +32,15 @@ var Os2Module = (function(){
     var Os2Array = new Uint8Array(tableSize);
     var Os2DataView = new DataView(Os2Array.buffer);
 
-    Os2Array.set(OS2Table.slice(0, 64));
+    Os2Array.set(OS2Table.subarray(0, 64));
     var offset = 64;
     offset = DataViewWrite2(Os2DataView, offset, getFirstCharIndex(glyfsList));
     offset = DataViewWrite2(Os2DataView, offset, getLastCharIndex(glyfsList));
-    Os2Array.set(OS2Table.slice(68, 74), offset);
+    Os2Array.set(OS2Table.subarray(68, 74), offset);
     offset = 74;
     offset = DataViewWrite2(Os2DataView, offset, yMax < 0 ? -yMax : yMax);
     offset = DataViewWrite2(Os2DataView, offset, yMin < 0 ? -yMin : yMin);
-    Os2Array.set(OS2Table.slice(78, 86), offset);
+    Os2Array.set(OS2Table.subarray(78, 86), offset);
     return Os2Array;
   }
   return Module;

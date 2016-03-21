@@ -219,7 +219,7 @@ var PostModule = (function(){
     var tableSize = getTableSize(glyfsList, names);
     var PostArray = new Uint8Array(tableSize);
     var PostDataView = new DataView(PostArray.buffer);
-    PostArray.set(PostTable.slice(0, tableHeaderSize));
+    PostArray.set(PostTable.subarray(0, tableHeaderSize));
     offset = tableHeaderSize;
     offset = DataViewWrite2(PostDataView, offset , glyfsList.length);
     // Array of glyph name indexes
