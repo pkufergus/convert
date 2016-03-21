@@ -94,3 +94,12 @@ function deepCopyUint8Array(srcArray, begin, end) {
   }
   return destArray;
 }
+
+var SIGNMASK = 0x8000;
+var SIGNBITS = 0xFFFF0000;
+function uint16toSignedInt(n) {
+  if (n & SIGNMASK) {
+    n = n | SIGNBITS;
+  }
+  return n;
+}

@@ -25,6 +25,7 @@
   <script src="font_lib/TableOs2.js"></script>
   <script src="font_lib/TableHmtx.js"></script>
   <script src="font_lib/TablePost.js"></script>
+  <script src="font_lib/test.js"></script>
 </head>
 <body>
 
@@ -153,7 +154,7 @@ readUrlText("data/HeadInfo/FontName.txt", TableTTFs);
 readUrlText("data/HeadInfo/FontFace.txt", TableTTFs);
 
 
-var fonts = new Array("之", "凤", "国","字","形","文","梅","毛","破","美","舞","行","裂","金","飞","龙");
+var fonts = new Array("中","之", "凤", "国","字","形","文","梅","毛","破","美","舞","行","裂","金","飞","龙");
 TableGlyfsList = new Array(fonts.length)
 
 var i = 0
@@ -167,6 +168,7 @@ for (i = 0; i< fonts.length; i++) {
   readUrlText("data/FontInfo/" + font + "/HorizAdvX.txt", TableGlyfsList[i]);
 }
 
+test_test();
 </script>
 </body>
 </html>

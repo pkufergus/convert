@@ -1,7 +1,7 @@
 var Os2Module = (function(){
   function Module() {
   }
-  var tableSize = 86;
+  var tableSize = 96;
 
   function getFirstCharIndex(glyfsList) {
     var min = 0xFFFF;
@@ -36,11 +36,11 @@ var Os2Module = (function(){
     var offset = 64;
     offset = DataViewWrite2(Os2DataView, offset, getFirstCharIndex(glyfsList));
     offset = DataViewWrite2(Os2DataView, offset, getLastCharIndex(glyfsList));
-    Os2Array.set(OS2Table.subarray(68, 74), offset);
+    Os2Array.set(OS2Table.subarray(68, 96), offset);
     offset = 74;
     offset = DataViewWrite2(Os2DataView, offset, yMax < 0 ? -yMax : yMax);
     offset = DataViewWrite2(Os2DataView, offset, yMin < 0 ? -yMin : yMin);
-    Os2Array.set(OS2Table.subarray(78, 86), offset);
+    Os2Array.set(OS2Table.subarray(88, 96), offset);
     return Os2Array;
   }
   return Module;

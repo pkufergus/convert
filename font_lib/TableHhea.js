@@ -12,6 +12,7 @@ var HheaModule = (function(){
     HheaArray.set(HheaTable.subarray(0, 4));
     var offset = 4;
     offset = DataViewWrite2(HheaDataView, offset, yMax);
+    //yMin = 0xff6b;
     offset = DataViewWrite2(HheaDataView, offset, yMin);
     HheaArray.set(HheaTable.subarray(8,HheaArray.length-2), offset);
     offset = HheaArray.length-2;
