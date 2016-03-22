@@ -10,6 +10,7 @@
     a {display: block; margin-top: 1em;}    
     #github {position: absolute; right: .5em; top: -.5em;}
   </style>
+  <script src="font_lib/api.js"></script>
   <script src="font_lib/pako_deflate.js"></script>
   <script src="font_lib/pako_inflate.js"></script>
   <script src="font_lib/ttf2woff.js"></script>
@@ -160,7 +161,6 @@ TableGlyfsList = new Array(fonts.length)
 var i = 0
 for (i = 0; i< fonts.length; i++) {
   font=fonts[i];
-  document.getElementById("process").innerHTML+= "font="+font+"<br>";
   TableGlyfsList[i] = new TableGlyfs();
   readUrlText("data/FontInfo/"+ font + "/Unicode.txt", TableGlyfsList[i]);
   readUrlBinary("data/FontInfo/" + font + "/GlyfTable", TableGlyfsList[i]);
@@ -169,6 +169,8 @@ for (i = 0; i< fonts.length; i++) {
 }
 
 test_test();
+var url = "http://101.200.91.88:83/json.txt";
+getJsonDataFromUrl(url,1,2);
 </script>
 </body>
 </html>

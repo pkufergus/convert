@@ -1,6 +1,10 @@
 
 function Println(msg) {
-  document.getElementById("process").innerHTML+="log : "+msg+" <br>";
+  if (msg.indexOf('Notice:') == 0) {
+    document.getElementById("process").innerHTML+=" "+msg+" <br>";
+  } else {
+    console.log(msg);
+  }
 }
 function Log(msg) {
   console.log(msg);
