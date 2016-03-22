@@ -135,11 +135,17 @@ var Ttf2WoffModule = (function(){
       };
       entries.push (tableEntry);
     }
-    entries = entries.sort(function (a, b) {
-      var aStr = a.Tag.toString();
-      var bStr = b.Tag.toString();
+    //entries = entries.sort(function (a, b) {
+    //  var aStr = a.Tag.toString();
+    //  var bStr = b.Tag.toString();
 
-      return aStr === bStr ? 0 : aStr < bStr ? -1 : 1;
+    //  return aStr === bStr ? 0 : aStr < bStr ? -1 : 1;
+    //});
+    entries = entries.sort(function (a, b) {
+      var aVal = a.Offset;
+      var bVal = b.Offset;
+
+      return aVal == bVal ? 0 : aVal < bVal ? -1 : 1;
     });
     var offset = SIZEOF.WOFF_HEADER + numTables * SIZEOF.WOFF_ENTRY;
     var woffSize = offset;

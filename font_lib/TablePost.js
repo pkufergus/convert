@@ -1,7 +1,7 @@
 var PostModule = (function(){
   function Module() {
   }
-  var tableHeaderSize = 36;
+  var tableHeaderSize = 32;
 
   var nameMap = new Map();
   function createNameMap() {
