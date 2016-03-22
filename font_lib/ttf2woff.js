@@ -212,7 +212,7 @@ var Ttf2WoffModule = (function(){
 
       var woffDataArray = new Uint8Array(len);
 
-      woffDataArray.fill(0);
+      uint8Fill(woffDataArray, woffDataArray.length, 0);
 
       if (res.length >= sfntData.length) {
         woffDataArray.set(sfntData);

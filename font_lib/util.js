@@ -103,3 +103,9 @@ function uint16toSignedInt(n) {
   }
   return n;
 }
+
+function uint8Fill(arr, len, val) {
+  for (var i = 0; i < len; i++) {
+    arr[i] = val;
+  }
+}
