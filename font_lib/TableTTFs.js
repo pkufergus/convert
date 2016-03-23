@@ -114,3 +114,21 @@ function TableEntry() {
   this.m_CorLength = 0;
   this.m_DataBytes = new Uint8Array();
 }
+
+function GlyfMapTable() {
+  this.glyfMapTable = new Dictionary();
+}
+
+GlyfMapTable.prototype = {
+add: function(id, Unicode, glyf) {
+  var key = "id:"+id+"_"+Unicode;
+  return this.glyfMapTable.add(key,glyf);
+},
+has: function(id, Unicode) {
+  var key = "id:"+id+"_"+Unicode;
+  return this.glyfMapTable.hasKey(key,glyf);
+},
+getAllValues: function() {
+  return this.glyfMapTable.values;
+}
+};
