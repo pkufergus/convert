@@ -115,6 +115,7 @@ function TableEntry() {
   this.m_DataBytes = new Uint8Array();
 }
 
+var ttfInfoMap = new Dictionary();
 function GlyfMapTable() {
   this.glyfMapTable = new Dictionary();
 }

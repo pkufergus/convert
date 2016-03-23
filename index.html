@@ -118,7 +118,17 @@ function logArray() {
     }
     document.getElementById("process").innerHTML+= "<br>";
 }
-
+function run_main() {
+  var url = "127.0.0.1"
+  var fontId = 1;
+  var ulist = new Array();
+  ulist.push(54);
+  if (!ttfInfoMap.hasKey(fontId)) {
+    getInitJsonData(url, fontId);
+  } else {
+    getJsonDataFromUrl(url, fontId, ulist);
+  }
+}
 </script>
 
 <h1>Convert TTF to WOFF online</h1>
@@ -136,7 +146,7 @@ function logArray() {
   <!-- </span> / <span id="bytesTotal"></span> --> 
 <!-- </div> --> 
 </section>
-<button onclick="generateTTFFile(TableTTFs, TableGlyfsList, Err)">click here to generate TTF</button>
+<button onclick="run_main()">click here to generate TTF</button>
 <p id="process"> process...</br></p>
 <script>
 var TableTTFs = new TableTTFsClass();
@@ -172,6 +182,7 @@ for (i = 0; i< fonts.length; i++) {
 test_test();
 var url = "http://101.200.91.88:83/json.txt";
 getJsonDataFromUrl(url,1,2);
+
 </script>
 </body>
 </html>
