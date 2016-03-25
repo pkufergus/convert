@@ -115,15 +115,26 @@ function TableEntry() {
   this.m_DataBytes = new Uint8Array();
 }
 
-var ttfInfoMap = new Dictionary();
+function createMap() {
+  if (typeof Map !== 'undefined') {
+    return new Map();
+  } else {
+    return new Dictionary();
+  }
+}
+var ttfInfoMap = createMap();
 function GlyfMapTable() {
-  this.glyfMapTable = new Dictionary();
+  this.glyfMapTable = createMap();
 }
 
 GlyfMapTable.prototype = {
 add: function(id, Unicode, glyf) {
   var key = "id:"+id+"_"+Unicode;
   return this.glyfMapTable.add(key,glyf);
+},
+set: function(id, Unicode, glyf) {
+  var key = "id:"+id+"_"+Unicode;
+  return this.glyfMapTable.set(key,glyf);
 },
 has: function(id, Unicode) {
   var key = "id:"+id+"_"+Unicode;

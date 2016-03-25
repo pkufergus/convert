@@ -1,3 +1,27 @@
+function createXHR()
+{
+    if (typeof XMLHttpRequest != "undefined")
+    {
+        return new XMLHttpRequest();
+    } // end if
+    else if (window.ActiveXObject)
+    {
+        var aVersions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0"];
+        for (var i = 0; i < aVersions.length; ++i)
+        {
+            try
+            {
+                var oXHR = new ActiveXObject(aVersions[i]);
+                return oXHR;
+            } // end try
+            catch (oError)
+            {
+                // do nothing
+            } // end catch
+        } // end for
+    } // end else if
+    throw new Error("XMLHttp object could not be created.")
+} // end createXHR();
 
 function Println(msg) {
   if (msg.indexOf('Notice:') == 0) {

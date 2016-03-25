@@ -11,6 +11,8 @@
     #github {position: absolute; right: .5em; top: -.5em;}
   </style>
   <script src="font_lib/api.js"></script>
+  <script src="font_lib/b64.js"></script>
+  <script src="font_lib/vdtDict.js"></script>
   <script src="font_lib/pako_deflate.js"></script>
   <script src="font_lib/pako_inflate.js"></script>
   <script src="font_lib/ttf2woff.js"></script>
@@ -180,9 +182,7 @@ for (i = 0; i< fonts.length; i++) {
 }
 
 test_test();
-var url = "http://101.200.91.88:83/json.txt";
-getJsonDataFromUrl(url,1,2);
-
+getInitFontInfo();
 </script>
 </body>
 </html>

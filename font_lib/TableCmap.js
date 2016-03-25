@@ -104,7 +104,7 @@ var CmapModule = (function(){
     var j=0;
     var offset = TABLE0.DATA_OFFSET;
     for (i = 0; i < 256; i++) {
-      if (j > count|| count<=0) {
+      if (j >= count|| count<=0) {
         break;
       }
       if (i<glyfsList[j].Unicode) {

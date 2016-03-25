@@ -58,6 +58,15 @@ return {
 				return null;
 			}
 		},
+    "set":function(key, value){
+      if(this.hasKey(key)){
+        this.values[this.keys.indexOf(key)] = value;
+      }
+      else{
+        this.keys.push(key);
+        this.values.push(value);
+      }
+    },
 		/**
 		Remove a key-value pair by its key
 		@param key Key of key-value pair to remove
