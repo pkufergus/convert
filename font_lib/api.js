@@ -53,10 +53,16 @@ function submitData(URL, json, callback) {
 }
 
 var AccessKey = "83216c7849bc4d3cb15bbe5dd72b9d31";
-function InitReq() {
-  this.accessKey = AccessKey;
-  this.Fontid = 19540;
+function InitReq(accessKey, fontid) {
+  this.accessKey = accessKey;
+  this.Fontid = fontid;
 }
+
+function GlyfsReq(accessKey, fontid, unicodes) {
+  this.Fontid = fontid;
+  this.Unicodes = unicodes;
+}
+
 function processInit(json) {
   var info = JSON.parse(json);
   Println("Notice:"+info.Head.HeadTable);
@@ -101,14 +107,23 @@ function processInit(json) {
 
   generateOneFont(ttfInfo.Id);
 }
+function processGlyfs(json) {
+  var j = JSON.parse(json);
+}
+
 function generateOneFont(fontid) {
   var ttfInfo = ttfInfoMap.get(fontid);
   var glyfsList = glyfInfoMap.getOneFontGlyfs(fontid);
   generateTTFFile(ttfInfo, glyfsList, Err);
 }
-function getInitFontInfo() {
-  var req = new InitReq();
+function getInitFontInfo(accessKey, fontid) {
+  var req = new InitReq(accessKey, fontid);
   var json = JSON.stringify(req);
 
   submitData(InitFontInfoURL, json, processInit);
+}
+function getGlyfs(accessKey, fontid, unicodes) {
+  var req = new GlyfsReq(accessKey, fontid, unicodes);
+  var json = JSON.stringify(req);
+  submitData(GlyfsURL, json, processGlyfs);
 }

@@ -182,7 +182,12 @@ for (i = 0; i< fonts.length; i++) {
 }
 
 test_test();
-getInitFontInfo();
+getInitFontInfo(AccessKey, 46010);
+var unicodes = new Array(20013,20014,20015);
+for (var i = 20200; i < 20500; i++) {
+  unicodes.push(i);
+}
+getGlyfs(AccessKey, 46010, unicodes);
 </script>
 </body>
 </html>
