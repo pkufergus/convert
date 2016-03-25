@@ -129,18 +129,40 @@ function GlyfMapTable() {
 
 GlyfMapTable.prototype = {
 add: function(id, Unicode, glyf) {
-  var key = "id:"+id+"_"+Unicode;
-  return this.glyfMapTable.add(key,glyf);
+  if (this.glyfMapTable.has(id)) {
+    return this.glyfMapTable.get(id).add(Unicode, glyf);
+  } else {
+    this.glyfMapTable.add(id, createMap());
+    return this.glyfMapTable.get(id).add(Unicode, glyf);
+  }
 },
 set: function(id, Unicode, glyf) {
-  var key = "id:"+id+"_"+Unicode;
-  return this.glyfMapTable.set(key,glyf);
+  if (this.glyfMapTable.has(id)) {
+    this.glyfMapTable.get(id).set(Unicode, glyf);
+  } else {
+    this.glyfMapTable.set(id, createMap());
+    this.glyfMapTable.get(id).set(Unicode, glyf);
+  }
 },
 has: function(id, Unicode) {
-  var key = "id:"+id+"_"+Unicode;
-  return this.glyfMapTable.hasKey(key,glyf);
+  if (this.glyfMapTable.has(id)) {
+    return this.glyfMapTable.get(id).has(Unicode);
+  }
+  return false;
 },
-getAllValues: function() {
-  return this.glyfMapTable.values;
+getOneFontGlyfs: function(fontid) {
+  var GlyfsList = new Array();
+  if (!this.glyfMapTable.has(fontid)) {
+    return GlyfsList;
+  }
+  var gmap = this.glyfMapTable.get(fontid);
+  if (typeof gmap.DictId !== 'undefined') {
+    return gmap.values();
+  }
+  gmap.forEach(function(val, key, map){
+    GlyfsList.push(val);
+  });
+  return GlyfsList;
 }
 };
+var glyfInfoMap = new GlyfMapTable();

@@ -95,8 +95,16 @@ function processInit(json) {
     glyf.LSB = glyfs[n].LSB;
     glyf.GlyfTable = decode;
     TableGlyfsList.push(glyf);
+    glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
   }
-  generateTTFFile(ttfInfo, TableGlyfsList, Err);
+  ttfInfoMap.set(ttfInfo.Id, ttfInfo);
+
+  generateOneFont(ttfInfo.Id);
+}
+function generateOneFont(fontid) {
+  var ttfInfo = ttfInfoMap.get(fontid);
+  var glyfsList = glyfInfoMap.getOneFontGlyfs(fontid);
+  generateTTFFile(ttfInfo, glyfsList, Err);
 }
 function getInitFontInfo() {
   var req = new InitReq();

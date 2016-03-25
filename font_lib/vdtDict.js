@@ -14,13 +14,17 @@
 */
 function Dictionary(){
 return {
-		"keys":new Array(),
-		"values":new Array(),
+    "DictId": "vdtDict",
+		"mkeys":new Array(),
+		"mvalues":new Array(),
     "getCount":function(){
-      return (this.keys.length);
+      return (this.mkeys.length);
     },
-    "getValues":function(){
-      return (this.values);
+    "values":function(){
+      return (this.mvalues);
+    },
+    "keys":function(){
+      return (this.mkeys);
     },
 		/**
 		Determine if dictionary contains a key
@@ -28,8 +32,11 @@ return {
 		@return True if key is found, otherwise false
 		*/
 		"hasKey":function(key){
-			return (this.keys.indexOf(key)>=0);
+			return (this.mkeys.indexOf(key)>=0);
 		},
+    "has":function(key){
+      return (this.mkeys.indexOf(key)>=0);
+    },
 		/**
 		Add a key-value pair to the dictionary
 		@param key Key to add
@@ -38,8 +45,8 @@ return {
 		*/
 		"add":function(key,value){
 			if(!this.hasKey(key)){
-				this.keys.push(key);
-				this.values.push(value);
+				this.mkeys.push(key);
+				this.mvalues.push(value);
 				return true;
 			}
 			return false; // key already exists
@@ -52,7 +59,7 @@ return {
 		*/
 		"get":function(key){
 			if(this.hasKey(key)){
-				return this.values[this.keys.indexOf(key)];
+				return this.mvalues[this.mkeys.indexOf(key)];
 			}
 			else{
 				return null;
@@ -60,11 +67,11 @@ return {
 		},
     "set":function(key, value){
       if(this.hasKey(key)){
-        this.values[this.keys.indexOf(key)] = value;
+        this.mvalues[this.mkeys.indexOf(key)] = value;
       }
       else{
-        this.keys.push(key);
-        this.values.push(value);
+        this.mkeys.push(key);
+        this.mvalues.push(value);
       }
     },
 		/**
@@ -75,10 +82,10 @@ return {
 		*/
 		"remove":function(key){
 			if(this.hasKey(key)){
-				var t = this.keys.indexOf(key);
-				var u = this.values[t];
-				this.keys.splice(t,1);
-				this.values.splice(t,1);
+				var t = this.mkeys.indexOf(key);
+				var u = this.mvalues[t];
+				this.mkeys.splice(t,1);
+				this.mvalues.splice(t,1);
 				return u;
 			}
 			return null;
@@ -90,10 +97,10 @@ return {
 				any are found, otherwise -1
 		*/
 		"countKeys":function(value){
-			if(this.values.indexOf(value)>=0){
+			if(this.mvalues.indexOf(value)>=0){
 				kc=0;
-				for(i=0;i<this.values.length;i++){
-					kc+=(this.values[i]==value)?1:0;
+				for(i=0;i<this.mvalues.length;i++){
+					kc+=(this.mvalues[i]==value)?1:0;
 				}
 				return kc;
 			}
