@@ -138,13 +138,14 @@ function createXHR()
 
 function Println(msg) {
   if (msg.indexOf('Notice:') == 0) {
-    document.getElementById("process").innerHTML+=" "+msg+" <br>";
-  } else {
+    //document.getElementById("process").innerHTML+=" "+msg+" <br>";
     console.log(msg);
+  } else {
+    //console.log(msg);
   }
 }
 function Log(msg) {
-  console.log(msg);
+  //console.log(msg);
 }
 
 function getFileName(o){
@@ -1358,7 +1359,6 @@ var Ttf2WoffModule = (function(){
       min: 1
     };
     var numTables = dataViewIn.getUint16(4);
-    console.log("num table =%d", numTables);
     var flavor = 0x10000;
 
     var woffHeader = new Uint8Array(SIZEOF.WOFF_HEADER);
@@ -1373,8 +1373,6 @@ var Ttf2WoffModule = (function(){
     woffHeaderDataView.setUint32(WOFF_OFFSET.META_ORIG_LENGTH, 0);
     woffHeaderDataView.setUint32(WOFF_OFFSET.PRIV_OFFSET, 0);
     woffHeaderDataView.setUint32(WOFF_OFFSET.PRIV_LENGTH, 0);
-
-    console.log("woff header =%o", woffHeader);
 
     var entries = [];
 
