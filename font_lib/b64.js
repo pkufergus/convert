@@ -1,10 +1,11 @@
-'use strict'
-
+var BASE64Module = (function(){
+  function Module() {
+  }
 var lookup = []
 var revLookup = []
 var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
 
-function init () {
+function base64_init () {
   var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
   for (var i = 0, len = code.length; i < len; ++i) {
     lookup[i] = code[i]
@@ -15,9 +16,9 @@ function init () {
   revLookup['_'.charCodeAt(0)] = 63
 }
 
-init()
+base64_init();
 
-function toByteArray (b64) {
+Module.toByteArray = function(b64) {
   if (b64 == null) {
     return new Array();
   }
@@ -107,3 +108,5 @@ function fromByteArray (uint8) {
 
   return parts.join('')
 }
+return Module;
+}());

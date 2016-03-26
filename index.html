@@ -10,25 +10,9 @@
     a {display: block; margin-top: 1em;}    
     #github {position: absolute; right: .5em; top: -.5em;}
   </style>
-  <script src="font_lib/api.js"></script>
-  <script src="font_lib/b64.js"></script>
-  <script src="font_lib/vdtDict.js"></script>
+  <script src="convert.js"></script>
   <script src="font_lib/pako_deflate.js"></script>
   <script src="font_lib/pako_inflate.js"></script>
-  <script src="font_lib/ttf2woff.js"></script>
-  <script src="font_lib/TableTTFs.js"></script>
-  <script src="font_lib/util.js"></script>
-  <script src="font_lib/GenerateTTF.js"></script>
-  <script src="font_lib/TableCmap.js"></script>
-  <script src="font_lib/TableLoca.js"></script>
-  <script src="font_lib/TableHhea.js"></script>
-  <script src="font_lib/TableHead.js"></script>
-  <script src="font_lib/TableGlyf.js"></script>
-  <script src="font_lib/TableMaxp.js"></script>
-  <script src="font_lib/TableOs2.js"></script>
-  <script src="font_lib/TableHmtx.js"></script>
-  <script src="font_lib/TablePost.js"></script>
-  <script src="font_lib/test.js"></script>
 </head>
 <body>
 
@@ -181,14 +165,14 @@ for (i = 0; i< fonts.length; i++) {
   readUrlText("data/FontInfo/" + font + "/HorizAdvX.txt", TableGlyfsList[i]);
 }
 
-test_test();
 fontid=19540
-getInitFontInfo(AccessKey, fontid);
+var AccessKey = "83216c7849bc4d3cb15bbe5dd72b9d31";
+FontProcessModule.getInitFontInfo(AccessKey, fontid);
 var unicodes = new Array(20013,20014,20015);
 for (var i = 20200; i < 20500; i++) {
   unicodes.push(i);
 }
-getGlyfs(fontid, unicodes);
+FontProcessModule.getGlyfs(fontid, unicodes);
 </script>
 </body>
 </html>

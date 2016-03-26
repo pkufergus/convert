@@ -833,7 +833,7 @@ var BS_BLOCK_DONE     = 2; /* block flush performed */
 var BS_FINISH_STARTED = 3; /* finish started, need only more output at next deflate */
 var BS_FINISH_DONE    = 4; /* finish done, accept no more input or output */
 
-var OS_CODE = 0x03; // Unix :) . Don't detect, use this default.
+var OS_CODE = 0x03; // Unix Don't detect, use this default.
 
 function err(strm, errorCode) {
   strm.msg = msg[errorCode];
@@ -3462,9 +3462,9 @@ function send_all_trees(s, lcodes, dcodes, blcodes)
 /* ===========================================================================
  * Check if the data type is TEXT or BINARY, using the following algorithm:
  * - TEXT if the two conditions below are satisfied:
- *    a) There are no non-portable control characters belonging to the
+ *    a There are no non-portable control characters belonging to the
  *       "black list" (0..6, 14..25, 28..31).
- *    b) There is at least one printable character belonging to the
+ *    b There is at least one printable character belonging to the
  *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
  * - BINARY otherwise.
  * - The following partially-portable control characters form a
