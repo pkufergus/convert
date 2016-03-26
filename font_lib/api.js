@@ -58,7 +58,7 @@ function InitReq(accessKey, fontid) {
   this.Fontid = fontid;
 }
 
-function GlyfsReq(accessKey, fontid, unicodes) {
+function GlyfsReq(fontid, unicodes) {
   this.Fontid = fontid;
   this.Unicodes = unicodes;
 }
@@ -108,13 +108,32 @@ function processInit(json) {
   generateOneFont(ttfInfo.Id);
 }
 function processGlyfs(json) {
-  var j = JSON.parse(json);
+  var glyfs = JSON.parse(json);
+  var fontid = 0;
+  for (var n in glyfs) {
+    if (glyfs[n].Unicode == 0 || glyfs[n].GlyfTable == null) {
+      continue;
+    }
+    var decode = toByteArray(glyfs[n].GlyfTable);
+    var glyf = new TableGlyfs();
+    glyf.Id = glyfs[n].FontId;
+    fontid = glyf.Id;
+    glyf.Unicode = glyfs[n].Unicode;
+    glyf.HorizAdvX = glyfs[n].HorizAdvX;
+    glyf.LSB = glyfs[n].LSB;
+    glyf.GlyfTable = decode;
+    glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
+  }
+  generateOneFont(fontid);
 }
 
 function generateOneFont(fontid) {
+  if (fontid == 0) {
+    return null;
+  }
   var ttfInfo = ttfInfoMap.get(fontid);
   var glyfsList = glyfInfoMap.getOneFontGlyfs(fontid);
-  generateTTFFile(ttfInfo, glyfsList, Err);
+  return generateTTFFile(ttfInfo, glyfsList, Err);
 }
 function getInitFontInfo(accessKey, fontid) {
   var req = new InitReq(accessKey, fontid);
@@ -122,8 +141,8 @@ function getInitFontInfo(accessKey, fontid) {
 
   submitData(InitFontInfoURL, json, processInit);
 }
-function getGlyfs(accessKey, fontid, unicodes) {
-  var req = new GlyfsReq(accessKey, fontid, unicodes);
+function getGlyfs(fontid, unicodes) {
+  var req = new GlyfsReq(fontid, unicodes);
   var json = JSON.stringify(req);
   submitData(GlyfsURL, json, processGlyfs);
 }
