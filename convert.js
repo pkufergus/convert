@@ -1918,7 +1918,7 @@ FontProcessModule = (function(){
       }
       callback(xhr.responseText);
     }
-    xhr.open('POST', URL,false);
+    xhr.open('POST', URL,true);
     xhr.setRequestHeader('Content-Type','application/json; charset=utf-8');
     xhr.send(json);
   }
