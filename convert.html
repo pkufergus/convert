@@ -110,23 +110,22 @@ function run_main() {
 }
 </script>
 
-<h1>Convert TTF to WOFF online</h1>
-<h2>download files from here</h2>
+<h1>在线字体处理 TTF字体转WOFF字体</h1>
+<h2>在这里下载文件</h2>
 <section id="fonts"></section>
 <section id="output"></section>
 
 <!-- 用于文件上传的表单元素 --> 
 <section>
 <form name="demoForm" id="demoForm" method="post" enctype="multipart/form-data"  action="javascript: uploadAndSubmit();"> 
-  <p>Upload File: <input type="file" name="file" /></p> 
+  <p>上传文件: <input type="file" name="file" /></p> 
   <p><input type="submit" value="Submit" /></p> 
 </form> 
-<div>Progessing (in Bytes): <span id="bytesRead"> 
+<div>上传进度 (字节): <span id="bytesRead"> 
   </span> / <span id="bytesTotal"></span> 
 </div> 
 </section>
 <!-- <button onclick="run_main()">click here to generate TTF</button> -->
-<p id="process"> process...</br></p>
 <script>
 
 </script>
