@@ -4,6 +4,9 @@ function buffer2url(buffer) {
 function buffer2url_woff(buffer) {
   return URL.createObjectURL(new Blob([buffer], {type: 'application/font-woff'}));
 }
+function buffer2url_otf(buffer) {
+  return URL.createObjectURL(new Blob([buffer], {type: 'application/font-otf'}));
+}
 
 var BASE64Module = (function(){
   function Module() {

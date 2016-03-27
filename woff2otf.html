@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>在线字体处理WOFF字体转OTF字体</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="keywords" content="在线字体处理  woff字体  otf字体 ttf字体 转换">
+  <meta name="description" content="在线字体处理 支持多种字体处理转换 windows mac woff ttf otf字体">
+  <style>
+    html {margin: 0; padding: 0; width: 100%; height: 100%;}
+    body {height: 100%; padding: 1em; box-sizing: border-box; max-width: 40em; margin: auto;}
+    h1, h2 {font-family: sans-serif;}
+    a {display: block; margin-top: 1em;}    
+    #github {position: absolute; right: .5em; top: -.5em;}
+  </style>
+  <script src="convert.js"></script>
+  <script src="woff2otf.js"></script>
+</head>
+<body>
+
+<script>
+
+  document.documentElement.ondragover = function(event) {
+    if (event.dataTransfer.items) {
+      return [].filter.call(event.dataTransfer.items, function(item) {
+        return item.kind !== 'file' || !item.type !== 'application/font-woff';
+      }).length === 0;
+    } else {
+      return !event.dataTransfer.types.contains('application/x-moz-file')
+    }
+  };
+  
+  document.documentElement.ondrop = function(event) {
+    event.preventDefault();
+
+    var container = document.getElementById('fonts');
+
+    [].forEach.call(event.dataTransfer.files, function(file) {
+      var reader = new FileReader();
+      reader.onload = function(event) {
+        var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+        link.textContent = link.download = file.name.replace(/\.woff$/, '.otf');
+        link.href = buffer2url(convert_streams(event.target.result));
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    return false;
+  };
+  
+function uploadAndSubmit() { 
+  var form = document.forms["demoForm"]; 
+
+  if (form["file"].files.length > 0) { 
+    // 寻找表单域中的 <input type="file" ... /> 标签
+    var file = form["file"].files[0]; 
+    console.log("file name = %s", file.name)
+    // try sending 
+    var reader = new FileReader(); 
+
+    reader.onloadstart = function() { 
+      // 这个事件在读取开始时触发
+      console.log("onloadstart"); 
+      document.getElementById("bytesTotal").textContent = file.size; 
+    } 
+    reader.onprogress = function(p) { 
+      // 这个事件在读取进行中定时触发
+      console.log("onprogress"); 
+      document.getElementById("bytesRead").textContent = p.loaded; 
+    } 
+
+    var container = document.getElementById('fonts');
+    reader.onload = function(event) {
+      // 这个事件在读取成功结束后触发
+      console.log("load complete");
+      var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+      link.textContent = link.download = file.name.replace(/\.woff$/, '.otf');
+      console.log("file name = %s --> %s", file.name, link.textContent)
+      var errorCode = new Object();
+      errorCode.status = -1;
+      console.log("err code = %d", errorCode.status);
+      link.href = buffer2url_otf(convert_streams(event.target.result, errorCode));
+      console.log("err code = %d", errorCode.status);
+      console.log("load complete 2"); 
+      alert("转换成功");
+    }
+
+    reader.readAsArrayBuffer(file); 
+  } else { 
+    alert ("Please choose a file."); 
+  } 
+}
+
+window.currentArray = new Object();
+function logArray() {
+  window.currentArray=TableTTFs.HeadTable;
+    document.getElementById("process").innerHTML+= "currentArray length =" + window.currentArray.length + "<br>";
+    for (var i = 0; i < 10 && i < window.currentArray.length; i++) {
+      document.getElementById("process").innerHTML+= "currentArray "+i+ "=" + window.currentArray[i]+"&nbsp&nbsp&nbsp&nbsp";
+    }
+    document.getElementById("process").innerHTML+= "<br>";
+}
+function run_main() {
+  var url = "127.0.0.1"
+  var fontId = 1;
+  var ulist = new Array();
+  ulist.push(54);
+  if (!ttfInfoMap.hasKey(fontId)) {
+    getInitJsonData(url, fontId);
+  } else {
+    getJsonDataFromUrl(url, fontId, ulist);
+  }
+}
+</script>
+
+<h1>在线字体处理 WOFF字体转OTF字体</h1>
+<h2>在这里下载文件</h2>
+<section id="fonts"></section>
+<section id="output"></section>
+
+<!-- 用于文件上传的表单元素 --> 
+<section>
+<form name="demoForm" id="demoForm" method="post" enctype="multipart/form-data"  action="javascript: uploadAndSubmit();"> 
+  <p>上传文件: <input type="file" name="file" /></p> 
+  <p><input type="submit" value="Submit" /></p> 
+</form> 
+<div>上传进度 (字节): <span id="bytesRead"> 
+  </span> / <span id="bytesTotal"></span> 
+</div> 
+</section>
+<!-- <button onclick="run_main()">click here to generate TTF</button> -->
+<script>
+
+</script>
+</body>
+</html>
