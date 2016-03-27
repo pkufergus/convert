@@ -125,16 +125,34 @@ function run_main() {
 </section>
 <button onclick="run_main()">click here to generate TTF</button>
 <p id="process"> process...</br></p>
+
+<input id="Text1" type="text" value="83216c7849bc4d3cb15bbe5dd72b9d31" style="width:300px" />
+<br>
+<br>
+<input onclick="load_init_font()" id="Button1" type="button" value="加载上面文本框accessKey字体" />
+<br>
+<br>
+<input id="Text2" type="text" value="恭喜发财"  style="width:300px"/>
+<br>
+<br>
+<input onclick="load_glyfs()" id="Button2" type="button" value="加载上面文本框里的文字" />
+<br>
+<br>
+
 <script>
 
-fontid=19540
-var AccessKey = "83216c7849bc4d3cb15bbe5dd72b9d31";
-FontProcessModule.getInitFontInfo(AccessKey, fontid);
-var unicodes = new Array(20013,20014,20015);
-for (var i = 20200; i < 20500; i++) {
-  unicodes.push(i);
+function load_init_font() {
+  var accessKey = document.getElementById("Text1").value;
+  FontProcessModule.getInitFontInfo(accessKey);
 }
-FontProcessModule.getGlyfs(fontid, unicodes);
+function load_glyfs() {
+  var fonts = document.getElementById("Text2").value;
+  var unicodes = new Array();
+  for (var n in fonts) {
+    unicodes.push(fonts.charCodeAt(n));
+  }
+  FontProcessModule.getGlyfs(unicodes);
+}
 </script>
 </body>
 </html>

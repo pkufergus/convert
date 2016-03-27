@@ -1901,6 +1901,7 @@ function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
 // ================= main =======================
 var ttfInfoMap = createMap();
 var glyfInfoMap = new GlyfMapTable();
+var globalFontId = 0;
 
 FontProcessModule = (function(){
   function Module() {
@@ -1912,21 +1913,21 @@ FontProcessModule = (function(){
   function submitData(URL, json, callback) {
     var xhr = new createXHR();
     xhr.onreadystatechange = function(){
-      if (xhr.status != 200 && xhr.status != 304) {
-        Println('HTTP error ' + xhr.status);
-        return;
+      if (xhr.readyState == 4) {
+        if (xhr.status != 200 && xhr.status != 304) {
+          Println('HTTP error ' + xhr.status);
+          return;
+        }
+        callback(xhr.responseText);
       }
-      callback(xhr.responseText);
     }
     xhr.open('POST', URL,true);
     xhr.setRequestHeader('Content-Type','application/json; charset=utf-8');
     xhr.send(json);
   }
 
-  var AccessKey = "83216c7849bc4d3cb15bbe5dd72b9d31";
-  function InitReq(accessKey, fontid) {
+  function InitReq(accessKey) {
     this.accessKey = accessKey;
-    this.Fontid = fontid;
   }
 
   function GlyfsReq(fontid, unicodes) {
@@ -1956,6 +1957,7 @@ FontProcessModule = (function(){
     ttfInfo.GaspTable= BASE64Module.toByteArray(headInfo.GaspTable);
     ttfInfo.HorizAdvX= headInfo.HorizAdvX;
     ttfInfo.FontFace= headInfo.FontFace;
+    globalFontId = ttfInfo.Id;
 
     var glyfs = info.GlyfsList;
     for (var n in glyfs) {
@@ -2006,14 +2008,25 @@ FontProcessModule = (function(){
     var glyfsList = glyfInfoMap.getOneFontGlyfs(fontid);
     return generateTTFFile(ttfInfo, glyfsList, Err);
   }
-  Module.getInitFontInfo = function(accessKey, fontid) {
-    var req = new InitReq(accessKey, fontid);
+  Module.getInitFontInfo = function(accessKey) {
+    var req = new InitReq(accessKey);
     var json = JSON.stringify(req);
 
     submitData(InitFontInfoURL, json, processInit);
   }
-  Module.getGlyfs = function(fontid, unicodes) {
-    var req = new GlyfsReq(fontid, unicodes);
+  Module.getGlyfs = function(unicodes) {
+    var needGetUnicodes = new Array();
+    for (var n in unicodes) {
+      var u = unicodes[n];
+      if (glyfInfoMap.has(globalFontId, u)) {
+        continue;
+      }
+      needGetUnicodes.push(u);
+    }
+    if (needGetUnicodes.length <= 0) {
+      return null;
+    }
+    var req = new GlyfsReq(globalFontId, needGetUnicodes);
     var json = JSON.stringify(req);
     submitData(GlyfsURL, json, processGlyfs);
   }
