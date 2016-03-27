@@ -1,3 +1,10 @@
+function buffer2url(buffer) {
+  return URL.createObjectURL(new Blob([buffer], {type: 'application/font-sfnt'}));
+}
+function buffer2url_woff(buffer) {
+  return URL.createObjectURL(new Blob([buffer], {type: 'application/font-woff'}));
+}
+
 var BASE64Module = (function(){
   function Module() {
   }

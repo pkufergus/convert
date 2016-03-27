@@ -16,13 +16,6 @@
 
 <script>
 
-  function buffer2url(buffer) {
-    return URL.createObjectURL(new Blob([buffer], {type: 'application/font-sfnt'}));
-  }
-  function buffer2url_woff(buffer) {
-    return URL.createObjectURL(new Blob([buffer], {type: 'application/font-woff'}));
-  }
-
   document.documentElement.ondragover = function(event) {
     if (event.dataTransfer.items) {
       return [].filter.call(event.dataTransfer.items, function(item) {
