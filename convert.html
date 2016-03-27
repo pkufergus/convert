@@ -75,7 +75,7 @@ function uploadAndSubmit() {
       var errorCode = new Object();
       errorCode.status = -1;
       console.log("err code = %d", errorCode.status);
-      link.href = buffer2url_woff(Ttf2WoffModule.ttf2woff(event.target.result, errorCode));
+      link.href = buffer2url_woff(Ttf2WoffModule.ttf2woff(new Uint8Array(event.target.result), errorCode));
       console.log("err code = %d", errorCode.status);
       console.log("load complete 2"); 
     }
@@ -123,18 +123,10 @@ function run_main() {
   </span> / <span id="bytesTotal"></span> 
 </div> 
 </section>
-<button onclick="run_main()">click here to generate TTF</button>
+<!-- <button onclick="run_main()">click here to generate TTF</button> -->
 <p id="process"> process...</br></p>
 <script>
 
-fontid=19540
-var AccessKey = "83216c7849bc4d3cb15bbe5dd72b9d31";
-FontProcessModule.getInitFontInfo(AccessKey, fontid);
-var unicodes = new Array(20013,20014,20015);
-for (var i = 20200; i < 20500; i++) {
-  unicodes.push(i);
-}
-FontProcessModule.getGlyfs(fontid, unicodes);
 </script>
 </body>
 </html>
