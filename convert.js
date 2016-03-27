@@ -400,15 +400,15 @@ var CmapModule = (function(){
   }
 
   function getSegments(glyfsList, bound) {
-    segments = new Array();
+    var segments = new Array();
     var delta = 0;
     var prevCode = -1;
     var prevDelta = -1;
-    segment = new Segment();
+    var segment = new Segment();
     var prevEndCode = 0;
 
     for (n in glyfsList) {
-      Unicode = glyfsList[n].Unicode;
+      var Unicode = glyfsList[n].Unicode;
       if (Unicode < 0 || Unicode > bound) {
         break;
       }
@@ -760,7 +760,7 @@ var GlyfModule = (function(){
 var Os2Module = (function(){
   function Module() {
   }
-  var tableSize = 86;
+  var tableSize = 96;
 
   function getFirstCharIndex(glyfsList) {
     var min = 0xFFFF;
@@ -795,11 +795,11 @@ var Os2Module = (function(){
     var offset = 64;
     offset = DataViewWrite2(Os2DataView, offset, getFirstCharIndex(glyfsList));
     offset = DataViewWrite2(Os2DataView, offset, getLastCharIndex(glyfsList));
-    Os2Array.set(OS2Table.subarray(68, 86), offset);
+    Os2Array.set(OS2Table.subarray(68, 96), offset);
     offset = 74;
     offset = DataViewWrite2(Os2DataView, offset, yMax < 0 ? -yMax : yMax);
     offset = DataViewWrite2(Os2DataView, offset, yMin < 0 ? -yMin : yMin);
-    Os2Array.set(OS2Table.subarray(78, 86), offset);
+    Os2Array.set(OS2Table.subarray(78, 96), offset);
     return Os2Array;
   }
   return Module;
@@ -811,16 +811,17 @@ var HmtxModule = (function(){
   var tableSize = 0;
 
   Module.createHmtxTable = function(glyfsList, HmtxTable, HorizAdvX) {
-    tableSize = glyfsList.length * 4
+    tableSize = (glyfsList.length) * 4
     var HmtxArray = new Uint8Array(tableSize);
     var HmtxDataView = new DataView(HmtxArray.buffer);
     var offset = 0;
+    var item;
     for (n in glyfsList) {
       item = glyfsList[n];
       if (item == null) {
         continue;
       }
-      if (item.HorizAdvX <= 0) {
+      if (item.HorizAdvX < 0) {
         offset = DataViewWrite2(HmtxDataView, offset, HorizAdvX);
       } else {
         offset = DataViewWrite2(HmtxDataView, offset, item.HorizAdvX);
@@ -1963,8 +1964,8 @@ FontProcessModule = (function(){
     for (var n in glyfs) {
       Println("Notice:"+n+" "+glyfs[n].Unicode);
       Println("Notice:"+n+" "+glyfs[n].GlyfTable);
-      if (glyfs[n].Unicode == 0 || glyfs[n].GlyfTable == null) {
-        continue;
+      if (glyfs[n].Unicode == 0) {
+        // continue;
       }
       var decode = BASE64Module.toByteArray(glyfs[n].GlyfTable);
       var glyf = new TableGlyfs();
@@ -1987,6 +1988,7 @@ FontProcessModule = (function(){
       if (glyfs[n].Unicode == 0 || glyfs[n].GlyfTable == null) {
         continue;
       }
+
       var decode = BASE64Module.toByteArray(glyfs[n].GlyfTable);
       var glyf = new TableGlyfs();
       glyf.Id = glyfs[n].FontId;
@@ -2016,6 +2018,9 @@ FontProcessModule = (function(){
   }
   Module.getGlyfs = function(unicodes) {
     var needGetUnicodes = new Array();
+    for (var i=32; i<52; i++) {
+      unicodes.push(i);
+    }
     for (var n in unicodes) {
       var u = unicodes[n];
       if (glyfInfoMap.has(globalFontId, u)) {

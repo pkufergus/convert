@@ -40,15 +40,14 @@ var CmapModule = (function(){
   }
 
   function getSegments(glyfsList, bound) {
-    segments = new Array();
     var delta = 0;
     var prevCode = -1;
     var prevDelta = -1;
-    segment = new Segment();
+    var segment = new Segment();
     var prevEndCode = 0;
 
     for (n in glyfsList) {
-      Unicode = glyfsList[n].Unicode;
+      var Unicode = glyfsList[n].Unicode;
       if (Unicode < 0 || Unicode > bound) {
         break;
       }

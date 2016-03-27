@@ -231,7 +231,6 @@ var PostModule = (function(){
         index+=1;
       } else {
         offset = DataViewWrite2(PostDataView, offset, 0);
-        index+=1;
       }
     }
 
