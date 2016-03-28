@@ -1911,7 +1911,7 @@ FontProcessModule = (function(){
   var InitFontInfoURL = "http://fs.youziku.com/font/GetFontInfo";
   var GlyfsURL = "http://fs.youziku.com/font/GetFontGlyfs";
 
-  function submitData(URL, json, callback) {
+  function submitData(URL, json, callback, key) {
     var xhr = new createXHR();
     xhr.onreadystatechange = function(){
       if (xhr.readyState == 4) {
@@ -1919,7 +1919,7 @@ FontProcessModule = (function(){
           Println('HTTP error ' + xhr.status);
           return;
         }
-        callback(xhr.responseText);
+        callback(xhr.responseText, true, key);
       }
     }
     xhr.open('POST', URL,true);
@@ -1936,7 +1936,7 @@ FontProcessModule = (function(){
     this.Unicodes = unicodes;
   }
 
-  function processInit(json) {
+  function processInit(json, isSave, accessKey) {
     var info = JSON.parse(json);
     Println("Notice:"+info.Head.HeadTable);
     Println("Notice:"+info.Head.OS2Table);
@@ -1980,8 +1980,11 @@ FontProcessModule = (function(){
     ttfInfoMap.set(ttfInfo.Id, ttfInfo);
 
     generateOneFont(ttfInfo.Id);
+    if (isSave) {
+      store.set(accessKey, json);
+    }
   }
-  function processGlyfs(json) {
+  function processGlyfs(json, isSave, fontId) {
     var glyfs = JSON.parse(json);
     var fontid = 0;
     for (var n in glyfs) {
@@ -2014,7 +2017,12 @@ FontProcessModule = (function(){
     var req = new InitReq(accessKey);
     var json = JSON.stringify(req);
 
-    submitData(InitFontInfoURL, json, processInit);
+    var initFontInfo = store.get(accessKey);
+    if (initFontInfo == null) {
+      submitData(InitFontInfoURL, json, processInit, accessKey);
+    } else {
+      processInit(initFontInfo, false);
+    }
   }
   Module.getGlyfs = function(unicodes) {
     var needGetUnicodes = new Array();
@@ -2033,7 +2041,7 @@ FontProcessModule = (function(){
     }
     var req = new GlyfsReq(globalFontId, needGetUnicodes);
     var json = JSON.stringify(req);
-    submitData(GlyfsURL, json, processGlyfs);
+    submitData(GlyfsURL, json, processGlyfs, globalFontId);
   }
   return Module;
 }());
