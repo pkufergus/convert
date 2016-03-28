@@ -7,6 +7,23 @@ function buffer2url_woff(buffer) {
 function buffer2url_otf(buffer) {
   return URL.createObjectURL(new Blob([buffer], {type: 'application/font-otf'}));
 }
+function objectToUint8Array(obj) {
+  var len = 0;
+  for (var n in obj) {
+    if (obj.hasOwnProperty(n)) {
+      len++;
+    }
+  }
+  var arr = new Uint8Array(len);
+  var i=0;
+  for (var n in obj) {
+    if (obj.hasOwnProperty(n)) {
+      arr[i] = obj[n];
+      i++;
+    }
+  }
+  return arr;
+}
 
 var BASE64Module = (function(){
   function Module() {
@@ -2002,6 +2019,9 @@ FontProcessModule = (function(){
       glyf.GlyfTable = decode;
       glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
     }
+    if (isSave) {
+      store.set("cachefont_"+fontId, JSON.stringify(glyfInfoMap.getOneFontGlyfs(fontid)));
+    }
     generateOneFont(fontid);
   }
 
@@ -2026,7 +2046,7 @@ FontProcessModule = (function(){
   }
   Module.getGlyfs = function(unicodes) {
     var needGetUnicodes = new Array();
-    for (var i=32; i<52; i++) {
+    for (var i=32; i<49; i++) {
       unicodes.push(i);
     }
     for (var n in unicodes) {
@@ -2039,7 +2059,38 @@ FontProcessModule = (function(){
     if (needGetUnicodes.length <= 0) {
       return null;
     }
-    var req = new GlyfsReq(globalFontId, needGetUnicodes);
+    var needGetUnicodes2 = new Array();
+    var cacheJson = store.get("cachefont_"+globalFontId);
+    if (cacheJson != null) {
+      var cacheObjs = JSON.parse(cacheJson);
+      var cacheMap = createMap();
+      for (var n in cacheObjs) {
+        cacheMap.set(cacheObjs[n].Unicode, cacheObjs[n]);
+      }
+      for (var n in needGetUnicodes) {
+        var u = unicodes[n];
+        if (cacheMap.has(u)) {
+          var glyf = new TableGlyfs();
+          var cacheGlyf = cacheMap.get(u);
+          glyf.Id = cacheGlyf.Id;
+          globalFontId = glyf.Id;
+          glyf.Unicode = cacheGlyf.Unicode;
+          glyf.HorizAdvX = cacheGlyf.HorizAdvX;
+          glyf.LSB = cacheGlyf.LSB;
+          glyf.GlyfTable = objectToUint8Array(cacheGlyf.GlyfTable);
+          glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
+          continue;
+        }
+        needGetUnicodes2.push(u);
+      }
+    } else {
+      needGetUnicodes2 = needGetUnicodes;
+    }
+    if (needGetUnicodes2.length <= 0) {
+      generateOneFont(globalFontId);
+      return;
+    }
+    var req = new GlyfsReq(globalFontId, needGetUnicodes2);
     var json = JSON.stringify(req);
     submitData(GlyfsURL, json, processGlyfs, globalFontId);
   }
