@@ -166,7 +166,7 @@ function createXHR()
 function Println(msg) {
   if (msg.indexOf('Notice:') == 0) {
     //document.getElementById("process").innerHTML+=" "+msg+" <br>";
-    console.log(msg);
+    //console.log(msg);
   } else {
     //console.log(msg);
   }
