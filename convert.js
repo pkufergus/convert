@@ -1996,10 +1996,14 @@ FontProcessModule = (function(){
     }
     ttfInfoMap.set(ttfInfo.Id, ttfInfo);
 
-    generateOneFont(ttfInfo.Id);
     if (isSave) {
       store.set(accessKey, json);
     }
+    var objs = yzkgetElementsByClass(accessKey);
+    for (var n in objs) {
+      objs[n].setAttribute("data-id",""+ttfInfo.Id);
+    }
+    generateOneFont(ttfInfo.Id);
   }
   function processGlyfs(json, isSave, fontId) {
     var glyfs = JSON.parse(json);
@@ -2041,7 +2045,7 @@ FontProcessModule = (function(){
     if (initFontInfo == null) {
       submitData(InitFontInfoURL, json, processInit, accessKey);
     } else {
-      processInit(initFontInfo, false);
+      processInit(initFontInfo, false, accessKey);
     }
   }
   Module.getGlyfs = function(unicodes) {

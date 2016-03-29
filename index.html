@@ -11,6 +11,7 @@
     #github {position: absolute; right: .5em; top: -.5em;}
   </style>
   <script src="convert.js"></script>
+  <script src="bound.js"></script>
 </head>
 <body>
 
@@ -139,6 +140,7 @@ function run_main() {
 <br>
 <br>
 
+<input id="TextInput" type="text" value="ssdd" class="youziku-83216c7849bc4d3cb15bbe5dd72b9d31"  />
 <script>
 
 function load_init_font() {
@@ -152,6 +154,17 @@ function load_glyfs() {
     unicodes.push(fonts.charCodeAt(n));
   }
   FontProcessModule.getGlyfs(unicodes);
+}
+
+var objs = {};
+objs = yzkgetElementsByClass("youziku");
+for (var i in objs) {
+  var obj = objs[i];
+  obj.onkeypress = function() {
+    var accessKey = this.className.split("-")[1];
+    accessKey = accessKey.trim().split(" ")[0];
+    FontProcessModule.getInitFontInfo(accessKey);
+  }
 }
 </script>
 </body>
