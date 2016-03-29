@@ -1923,7 +1923,6 @@ var globalFontId = 0;
 
 FontProcessModule = (function(){
   function Module() {
-    this.accessKey = "83216c7849bc4d3cb15bbe5dd72b9d31"; 
   }
   var InitFontInfoURL = "http://fs.youziku.com/font/GetFontInfo";
   var GlyfsURL = "http://fs.youziku.com/font/GetFontGlyfs";
@@ -2001,7 +2000,7 @@ FontProcessModule = (function(){
     }
     var objs = yzkgetElementsByClass(accessKey);
     for (var n in objs) {
-      objs[n].setAttribute("data-id",""+ttfInfo.Id);
+      objs[n].setAttribute("fontid",""+ttfInfo.Id);
     }
     generateOneFont(ttfInfo.Id);
   }
@@ -2024,7 +2023,7 @@ FontProcessModule = (function(){
       glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
     }
     if (isSave) {
-      store.set("cachefont_"+fontId, JSON.stringify(glyfInfoMap.getOneFontGlyfs(fontid)));
+      store.set("cachefont_"+fontId, JSON.stringify(glyfInfoMap.getOneFontGlyfs(fontId)));
     }
     generateOneFont(fontid);
   }
@@ -2050,7 +2049,7 @@ FontProcessModule = (function(){
   }
   Module.getGlyfs = function(unicodes) {
     var needGetUnicodes = new Array();
-    for (var i=32; i<49; i++) {
+    for (var i=32; i<33; i++) {
       unicodes.push(i);
     }
     for (var n in unicodes) {
@@ -2072,7 +2071,7 @@ FontProcessModule = (function(){
         cacheMap.set(cacheObjs[n].Unicode, cacheObjs[n]);
       }
       for (var n in needGetUnicodes) {
-        var u = unicodes[n];
+        var u = needGetUnicodes[n];
         if (cacheMap.has(u)) {
           var glyf = new TableGlyfs();
           var cacheGlyf = cacheMap.get(u);
