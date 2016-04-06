@@ -10,6 +10,16 @@ var HeadModule = (function(){
   var yMin = 0;
   var xMax = 0;
   var yMax = 0;
+  Module.init = function() {
+    xMin = 0;
+    yMin = 0;
+    xMax = 0;
+    yMax = 0;
+    this.xMin = 0;
+    this.yMin = 0;
+    this.xMax = 0;
+    this.yMax = 0;
+  }
   Module.createHeadTable = function(glyfsList, glyfsTotalSize, HeadTable) {
     var HeadArray = new Uint8Array(tableSize);
     var HeadDataView = new DataView(HeadArray.buffer);
