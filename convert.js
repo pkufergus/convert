@@ -1497,9 +1497,9 @@ var Ttf2WoffModule = (function(){
       // We should use compression only if it really save space (standard requirement).
       // Also, data should be aligned to long (with zeros?).
       compLength = Math.min(res.length, sfntData.length);
-      len = longAlign(compLength);
+      compLength = longAlign(compLength);
 
-      var woffDataArray = new Uint8Array(len);
+      var woffDataArray = new Uint8Array(compLength);
 
       uint8Fill(woffDataArray, woffDataArray.length, 0);
 
