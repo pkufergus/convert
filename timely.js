@@ -2065,40 +2065,10 @@ FontProcessModule = (function () {
             }
         }
         xhr.open('POST', URL, true);
-        // xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send(JSON.stringify(json));
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.send(json);
     }
 
-     function submitData2(URL, json, callback, key,accesskey) {
-       var xhr = new JSONHttpRequest();
-       xhr.onreadystatechange = function () {
-         if (xhr.readyState == 4) {
-           if (xhr.status != 200 && xhr.status != 304) {
-             Println('HTTP error ' + xhr.status);
-             return;
-           }
-           callback(xhr.responseText, true, key, accesskey);
-         }
-       }
-       xhr.open('POST', URL, true);
-          // xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-       xhr.sendJSON(json);
-     }
-    function submitData3(URL, json, callback, key,accesskey) {
-      $.ajax({
-          url:URL,
-          data:json,
-          type:'post',
-          dataType:'json',
-          success: function(data) {
-            callback(data, true, key, accesskey);
-          },
-          error:function() {
-          }
-      }
-      );
-    }
     function InitReq(accessKey) {
         this.accessKey = accessKey;
     }
@@ -2218,7 +2188,7 @@ FontProcessModule = (function () {
 
         var initFontInfo = store.get(accessKey);
         if (initFontInfo == null) {
-            submitData(InitFontInfoURL, req, processInit, accessKey);
+            submitData(InitFontInfoURL, json, processInit, accessKey);
         } else {
             processInit(initFontInfo, false, accessKey);
         }
@@ -2270,7 +2240,7 @@ FontProcessModule = (function () {
         }
         var req = new GlyfsReq(globalFontId, needGetUnicodes2);
         var json = JSON.stringify(req);
-        submitData(GlyfsURL, req, processGlyfs, globalFontId, accessKey);
+        submitData(GlyfsURL, json, processGlyfs, globalFontId, accessKey);
     }
     return Module;
 }());
