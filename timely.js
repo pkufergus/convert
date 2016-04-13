@@ -2121,6 +2121,23 @@ FontProcessModule = (function () {
         }
         ttfInfoMap.set(ttfInfo.Id, ttfInfo);
 
+        if (!isSave) {
+          var fontId = ttfInfo.Id;
+          var cacheJson = store.get("cachefont_"+fontId);
+          if (cacheJson != null) {
+            var cacheObjs = JSON.parse(cacheJson);
+            for (var n in cacheObjs) {
+              var cacheGlyf = cacheObjs[n];
+              var glyf = new TableGlyfs();
+              glyf.Id = cacheGlyf.Id;
+              glyf.Unicode = cacheGlyf.Unicode;
+              glyf.HorizAdvX = cacheGlyf.HorizAdvX;
+              glyf.LSB = cacheGlyf.LSB;
+              glyf.GlyfTable = objectToUint8Array(cacheGlyf.GlyfTable);
+              glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
+            }
+          }
+        }
         if (isSave) {
             store.set(accessKey, json);
         }
