@@ -1,172 +1,42 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-<head lang="en">
-  <meta charset="UTF-8">
-  <title>Convert TTF to WOFF online</title>
-  <style>
-    html {margin: 0; padding: 0; width: 100%; height: 100%;}
-    body {height: 100%; padding: 1em; box-sizing: border-box; max-width: 40em; margin: auto;}
-    h1, h2 {font-family: sans-serif;}
-    a {display: block; margin-top: 1em;}    
-    #github {position: absolute; right: .5em; top: -.5em;}
-  </style>
-  <script src="convert.js"></script>
-  <script src="bound.js"></script>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>即时输入</title>
+
+
+    <script src="timely.js"></script>
+
 </head>
 <body>
 
-<script>
+    <button onclick="chengfont('Text1', 'b43807ee965f4910b3599398bce4af30')">站酷快乐体</button>
+    <button onclick="chengfont('Text1', 'c6541423a19f4067b2d19343999c3cb6')">孙运和炫丽体</button>
+    <button onclick="chengfont('Text1', '669dfd5445104cf09724b3e468eab069')">钟齐山文丰手写体</button>
+    <button onclick="chengfont('Text1', 'aa7cff078b1f46c1aab4931da572e8f7')">钟齐马善政毛笔楷书</button>
+    <button onclick="chengfont('Text1', '969d4dea2acf4bea8968b755deda15c7')">字体管家嘉丽丽</button>
+    <br></br>
+    <button onclick="chengfont('Text1', 'a77383407b66435a8b5c76ab05093278')">岚竹风体</button>
+    <button onclick="chengfont('Text1', '256f55fb017942c382b3ccb56bfae1dd')">禹卫书法行书繁体</button>
+    <button onclick="chengfont('Text1', 'cca1a596d8c84ede820147328847ff2a')">国祥手写体</button>
+    <button onclick="chengfont('Text1', '36627bea11fe47379bb65da992981017')">日系中文趣圆体</button>
+    <button onclick="chengfont('Text1', 'b84374743a834362a0949eeab20eac08')">书法家颜楷体</button>
+    <br></br>
+    <button onclick="chengfont('Text1', 'b5a27430c69d452588003dcb07cc2df5')">禹卫书法行书简体</button>
+    <button onclick="chengfont('Text1', '0b32b836f1fc4369bb285f888b7ec5d7')">刘梦吟书法行楷简体</button>
+    <button onclick="chengfont('Text1', 'ef466ba6a877403ca96f6cf059a8f0b7')">锐字逼格青春粗黑</button>
+    <button onclick="chengfont('Text1', '899cbedd0d7c4240b3fb41200fe7c698')">铁兰体</button>
+    <button onclick="chengfont('Text1', '10e083a969784c769e4babe918da9ae9')">金梅小甜甜美工字</button>
+    <button onclick="chengfont('Text1', '729f03957c2f4d3fb04df0f91591afb2')">日本雅艺体</button>
 
-  document.documentElement.ondragover = function(event) {
-    if (event.dataTransfer.items) {
-      return [].filter.call(event.dataTransfer.items, function(item) {
-        return item.kind !== 'file' || !item.type !== 'application/font-woff';
-      }).length === 0;
-    } else {
-      return !event.dataTransfer.types.contains('application/x-moz-file')
-    }
-  };
-  
-  document.documentElement.ondrop = function(event) {
-    event.preventDefault();
+    <br><br><br><br>
+    <input id="Text1" type="text" value="请输入文字" class="youziku-51bf5cf86c4a47f28d7ccdba1f2c1647 toplink1 Active" style="width :1000px; height :50px; font-size:50px" />
 
-    var container = document.getElementById('fonts');
+   
+    <section id="fonts"></section><br>
+    <section id="output"></section>
 
-    [].forEach.call(event.dataTransfer.files, function(file) {
-      var reader = new FileReader();
-      reader.onload = function(event) {
-        var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
-        link.textContent = link.download = file.name.replace(/\.woff$/, '.otf');
-        link.href = buffer2url(convert_streams(event.target.result));
-      };
-      reader.readAsArrayBuffer(file);
-    });
+   
 
-    return false;
-  };
-  
-function uploadAndSubmit() { 
-  var form = document.forms["demoForm"]; 
-
-  if (form["file"].files.length > 0) { 
-    // 寻找表单域中的 <input type="file" ... /> 标签
-    var file = form["file"].files[0]; 
-    console.log("file name = %s", file.name)
-    // try sending 
-    var reader = new FileReader(); 
-
-    reader.onloadstart = function() { 
-      // 这个事件在读取开始时触发
-      console.log("onloadstart"); 
-      document.getElementById("bytesTotal").textContent = file.size; 
-    } 
-    reader.onprogress = function(p) { 
-      // 这个事件在读取进行中定时触发
-      console.log("onprogress"); 
-      document.getElementById("bytesRead").textContent = p.loaded; 
-    } 
-
-    var container = document.getElementById('fonts');
-    reader.onload = function(event) {
-      // 这个事件在读取成功结束后触发
-      console.log("load complete");
-      var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
-      link.textContent = link.download = file.name.replace(/\.ttf$/, '.woff');
-      console.log("file name = %s --> %s", file.name, link.textContent)
-      var errorCode = new Object();
-      errorCode.status = -1;
-      console.log("err code = %d", errorCode.status);
-      link.href = buffer2url_woff(Ttf2WoffModule.ttf2woff(event.target.result, errorCode));
-      console.log("err code = %d", errorCode.status);
-      console.log("load complete 2"); 
-    }
-
-    reader.readAsArrayBuffer(file); 
-  } else { 
-    alert ("Please choose a file."); 
-  } 
-}
-
-window.currentArray = new Object();
-function logArray() {
-  window.currentArray=TableTTFs.HeadTable;
-    document.getElementById("process").innerHTML+= "currentArray length =" + window.currentArray.length + "<br>";
-    for (var i = 0; i < 10 && i < window.currentArray.length; i++) {
-      document.getElementById("process").innerHTML+= "currentArray "+i+ "=" + window.currentArray[i]+"&nbsp&nbsp&nbsp&nbsp";
-    }
-    document.getElementById("process").innerHTML+= "<br>";
-}
-function run_main() {
-  var url = "127.0.0.1"
-  var fontId = 1;
-  var ulist = new Array();
-  ulist.push(54);
-  if (!ttfInfoMap.hasKey(fontId)) {
-    getInitJsonData(url, fontId);
-  } else {
-    getJsonDataFromUrl(url, fontId, ulist);
-  }
-}
-</script>
-
-<h1>Convert TTF to WOFF online</h1>
-<h2>download files from here</h2>
-<section id="fonts"></section>
-<section id="output"></section>
-
-<!-- 用于文件上传的表单元素 --> 
-<section>
-<form name="demoForm" id="demoForm" method="post" enctype="multipart/form-data"  action="javascript: uploadAndSubmit();"> 
-  <p>Upload File: <input type="file" name="file" /></p> 
-  <p><input type="submit" value="Submit" /></p> 
-</form> 
-<div>Progessing (in Bytes): <span id="bytesRead"> 
-  </span> / <span id="bytesTotal"></span> 
-</div> 
-</section>
-<button onclick="run_main()">click here to generate TTF</button>
-<p id="process"> process...</br></p>
-
-<input id="Text1" type="text" value="83216c7849bc4d3cb15bbe5dd72b9d31" style="width:300px" />
-<br>
-<br>
-<input onclick="load_init_font()" id="Button1" type="button" value="加载上面文本框accessKey字体" />
-<br>
-<br>
-<input id="Text2" type="text" value="1"  style="width:300px"/>
-<br>
-<br>
-<input onclick="load_glyfs()" id="Button2" type="button" value="加载上面文本框里的文字" />
-<br>
-<br>
-
-<input id="TextInput" type="text" value="ssdd" class="youziku-83216c7849bc4d3cb15bbe5dd72b9d31"  />
-<script>
-
-function load_init_font() {
-  var accessKey = document.getElementById("Text1").value;
-  FontProcessModule.getInitFontInfo(accessKey);
-}
-function load_glyfs() {
-  var fonts = document.getElementById("Text2").value;
-  var unicodes = new Array();
-  for (var n in fonts) {
-    unicodes.push(fonts.charCodeAt(n));
-  }
-  FontProcessModule.getGlyfs(unicodes);
-}
-
-var objs = {};
-objs = yzkgetElementsByClass("youziku");
-for (var i in objs) {
-  var obj = objs[i];
-  obj.onkeypress = function() {
-    var accessKey = this.className.split("-")[1];
-    accessKey = accessKey.trim().split(" ")[0];
-    FontProcessModule.getInitFontInfo(accessKey);
-  }
-}
-
-</script>
 </body>
 </html>
