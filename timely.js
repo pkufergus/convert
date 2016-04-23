@@ -23,9 +23,12 @@ window.onload = function () {
         }
     }
 }
-//function buffer2url_woff(buffer) {
-//    return URL.createObjectURL(new Blob([buffer], { type: 'application/font-woff' }));
-//}
+function buffer2url_woff(buffer) {
+    return URL.createObjectURL(new Blob([buffer], { type: 'application/font-woff' }));
+}
+function buffer2url(buffer, typename) {
+    return URL.createObjectURL(new Blob([buffer.buffer], { type: 'application/vnd.ms-fontobject'  }));
+}
 
 function yzkgetElementsByClass(classN) {
     var elements = [];
@@ -783,7 +786,7 @@ var HeadModule = (function () {
         var HeadDataView = new DataView(HeadArray.buffer);
 
         for (n in glyfsList) {
-            item = glyfsList[n];
+            var item = glyfsList[n];
             if (item.GlyfTable == null) {
                 continue;
             }
@@ -851,7 +854,7 @@ var Os2Module = (function () {
     function getFirstCharIndex(glyfsList) {
         var min = 0xFFFF;
         for (n in glyfsList) {
-            item = glyfsList[n];
+            var item = glyfsList[n];
             if (item.Unicode != 0 && item.Unicode < min) {
                 min = item.Unicode;
                 break;
@@ -864,7 +867,7 @@ var Os2Module = (function () {
         var max = 0;
         var len = glyfsList.length;
         for (i = len - 1; i >= 0; i--) {
-            item = glyfsList[i];
+            var item = glyfsList[i];
             if (item.Unicode <= 0xFFFF && item.Unicode > max) {
                 max = item.Unicode;
                 break;
@@ -1137,7 +1140,7 @@ var PostModule = (function () {
         var names = new Array();
         createNameMap();
         for (n in glyfsList) {
-            item = glyfsList[n];
+            var item = glyfsList[n];
             if (item.Unicode != 0) {
                 names.push(pascalString(item));
             }
@@ -1151,7 +1154,7 @@ var PostModule = (function () {
         // Array of glyph name indexes
         var index = 258; // first index of custom glyph name, it is calculated as glyph name index + 258
         for (n in glyfsList) {
-            item = glyfsList[n];
+            var item = glyfsList[n];
             if (item.Unicode != 0) {
                 offset = DataViewWrite2(PostDataView, offset, index);
                 index += 1;
@@ -1943,7 +1946,7 @@ function generateTTF(TableTTFs, glyfsList, Err) {
     var i = 0;
     for (n in tableOrder) {
         for (t in ttfTableEntryList) {
-            item = ttfTableEntryList[t];
+            var item = ttfTableEntryList[t];
             if (item.m_Tag == tableOrder[n]) {
                 offset = DataViewWrite4(ttfDataView, offset, item.m_Tag);
                 offset = DataViewWrite4(ttfDataView, offset, item.m_CheckSum);
@@ -1955,7 +1958,7 @@ function generateTTF(TableTTFs, glyfsList, Err) {
     }
 
     for (t in ttfTableEntryList) {
-        item = ttfTableEntryList[t];
+        var item = ttfTableEntryList[t];
         if (item.m_Tag == TAG.HEAD) {
             headOffset = offset;
         }
@@ -1980,11 +1983,22 @@ function generateTTF(TableTTFs, glyfsList, Err) {
 var count_file = 1;
 function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
     var ttfArray = generateTTF(TableTTFs, TableGlyfsList, Err);
-    var br = myBrowser();
-    if (br.indexOf("IE") == 0) {
+    var container = document.getElementById('fonts');
+    var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+    link.textContent = link.download = "test" + count_file + ".ttf";
+    link.href = buffer2url_woff(ttfArray);
+    count_file++;
+
+    var br = navigator.sayswho;
+    if (br.indexOf("IE") >= 0 || br.indexOf("Edge") >= 0) {
       console.log("this is ie br");
-      var otfArray = Ttf2EotModule.ttf2eot(ttfArray);
-      return otfArray;
+      var eotArray = Ttf2EotModule.ttf2eot(ttfArray);
+      var container = document.getElementById('fonts');
+      var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+      link.textContent = link.download = "test" + count_file + ".eot";
+      link.href = buffer2url(eotArray,"vnd.ms-fontobject");
+      count_file++;
+      return eotArray;
     }
     return ttfArray;
     //var container = document.getElementById('fonts');
@@ -2015,12 +2029,20 @@ function createfontface(accesskey, woffArray) {
   var br = navigator.sayswho;
   var font_type = "font-ttf";
   var format_type = "truetype";
+  var blob;
   if (br.indexOf("IE") >= 0) {
     format_type = "embedded-opentype";
+    blob = new Blob([woffArray.buffer], { type: 'application/vnd.ms-fontobject'});
+  } else {
+    blob = new Blob([woffArray], { type: 'application/font-ttf'});
   }
-    var blob = new Blob([woffArray], { type: 'application/' + font_type });
+    // var blob = new Blob([woffArray.buffer], { type: 'application/font-eot'});
+    // var blob = new Blob([woffArray.buffer], { type: 'font/eot'});
+    // var blob = new Blob([woffArray.buffer], { type: 'font/ttf'});
     readBlobAsDataURL(blob, function (basewoff) {
         var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "' } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" + basewoff + "') format('" + format_type +"'); }  ";
+        // var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "'; } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" +"test26.eot" + "'); src:url('" +"test26.eot?#iefix" + "') format('" + format_type +"'); }  ";
+        // var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "'; } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" +"test26.eot?#iefix" + "') format('" + format_type +"'); }  ";
         var cssid = "yzk-" + accesskey;
         var stylelist = document.getElementsByName(cssid);
         if (stylelist.length > 0) {
@@ -2095,11 +2117,16 @@ FontProcessModule = (function () {
                     //Println('HTTP error ' + xhr.status);
                     return;
                 }
+                // if (navigator.sayswho.indexOf("Firefox") >= 0) {
+                //   var x2js = new X2JS();
+                //   xhr.responseText = x2js.xml_str2json(xhr.responseText);
+                // }
                 callback(xhr.responseText, true, key, accesskey);
             }
         }
         xhr.open('POST', URL, true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.setRequestHeader("Accept", 'application/json, text/javascript');
         xhr.send(json);
     }
 
@@ -2767,6 +2794,8 @@ navigator.sayswho= (function(){
     if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
     return M.join(' ');
 })();
+// navigator.sayswho = "Chrome";
+// navigator.sayswho = "IE";
 function myBrowser(){
   var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
   var isOpera = userAgent.indexOf("Opera") > -1;
