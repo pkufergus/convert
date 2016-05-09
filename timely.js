@@ -1,4 +1,4 @@
-window.onload = function () {
+﻿window.onload = function () {
     var objs = {};
     objs = yzkgetElementsByClass("youziku");
     var accessKey = "";
@@ -8,7 +8,7 @@ window.onload = function () {
         accessKey = obj.className.trim().split(" ")[0].split("-")[1];
         FontProcessModule.getInitFontInfo(accessKey);
 
-        obj.onkeyup = function () {
+        obj.oninput = function () {
             var foid = this.attributes['fontid'].nodeValue;
             var ataccessKey = this.attributes['accessKey'].nodeValue;
             var fid = parseInt(foid);
@@ -23,16 +23,17 @@ window.onload = function () {
         }
     }
 }
-function buffer2url_woff(buffer) {
-    return URL.createObjectURL(new Blob([buffer], { type: 'application/font-woff' }));
-}
-function buffer2url(buffer, typename) {
-    return URL.createObjectURL(new Blob([buffer.buffer], { type: 'application/vnd.ms-fontobject'  }));
-}
+//function buffer2url_woff(buffer) {
+//    return URL.createObjectURL(new Blob([buffer], { type: 'application/font-woff' }));
+//}
+//function buffer2url(buffer, typename) {
+//    return URL.createObjectURL(new Blob([buffer.buffer], { type: 'application/vnd.ms-fontobject' }));
+//}
 
 function yzkgetElementsByClass(classN) {
     var elements = [];
     var listElm = document.getElementsByTagName('input');
+    var listElmt = document.getElementsByTagName('textarea');
 
     for (var i = 0; i < listElm.length; i++) {
 
@@ -41,6 +42,14 @@ function yzkgetElementsByClass(classN) {
         }
         if (hasClass(listElm[i].className, classN))
             elements.push(listElm[i]);
+    }
+    for (var i = 0; i < listElmt.length; i++) {
+
+        if (listElmt[i].className === 'undefined') {
+            continue;
+        }
+        if (hasClass(listElmt[i].className, classN))
+            elements.push(listElmt[i]);
     }
     return elements;
 }
@@ -134,19 +143,19 @@ var BASE64Module = (function () {
         return arr
     }
 
-    function tripletToBase64(num) {
-        return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-    }
+    //function tripletToBase64(num) {
+    //    return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+    //}
 
-    function encodeChunk(uint8, start, end) {
-        var tmp
-        var output = []
-        for (var i = start; i < end; i += 3) {
-            tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-            output.push(tripletToBase64(tmp))
-        }
-        return output.join('')
-    }
+    //function encodeChunk(uint8, start, end) {
+    //    var tmp
+    //    var output = []
+    //    for (var i = start; i < end; i += 3) {
+    //        tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    //        output.push(tripletToBase64(tmp))
+    //    }
+    //    return output.join('')
+    //}
     //Module.fromByteArray = function (raw) {
     //    var base64 = '';
     //    var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -228,40 +237,40 @@ function getFileName(o) {
     return lastname;
 }
 
-function readUrlBinary(filepath, obj) {
-    var oReq = new XMLHttpRequest();
-    oReq.open("GET", "/" + filepath, true);
-    oReq.responseType = "arraybuffer";
+//function readUrlBinary(filepath, obj) {
+//    var oReq = new XMLHttpRequest();
+//    oReq.open("GET", "/" + filepath, true);
+//    oReq.responseType = "arraybuffer";
 
-    oReq.onload = function (oEvent) {
-        var arrayBuffer = oReq.response; // Note: not oReq.responseText
-        if (arrayBuffer) {
-            var byteArray = new Uint8Array(arrayBuffer);
-            lastname = getFileName(filepath);
-            obj.SetValueByFilename(lastname, byteArray);
-            //Log("load filepath : " + filepath + " len=" + byteArray.length);
-        }
-    };
+//    oReq.onload = function (oEvent) {
+//        var arrayBuffer = oReq.response; // Note: not oReq.responseText
+//        if (arrayBuffer) {
+//            var byteArray = new Uint8Array(arrayBuffer);
+//            lastname = getFileName(filepath);
+//            obj.SetValueByFilename(lastname, byteArray);
+//            //Log("load filepath : " + filepath + " len=" + byteArray.length);
+//        }
+//    };
 
-    oReq.send(null);
-}
+//    oReq.send(null);
+//}
 
-function readUrlText(filepath, obj) {
-    var oReq = new XMLHttpRequest();
-    oReq.open("GET", "/" + filepath, true);
-    oReq.responseType = "text";
+//function readUrlText(filepath, obj) {
+//    var oReq = new XMLHttpRequest();
+//    oReq.open("GET", "/" + filepath, true);
+//    oReq.responseType = "text";
 
-    oReq.onload = function (oEvent) {
-        var content = oReq.responseText; // Note: not oReq.responseText
-        if (content) {
-            lastname = getFileName(filepath);
-            obj.SetValueByFilename(lastname, content);
-            //Log("load filepath : " + filepath + " = " + content + " len=" + content.length);
-        }
-    };
+//    oReq.onload = function (oEvent) {
+//        var content = oReq.responseText; // Note: not oReq.responseText
+//        if (content) {
+//            lastname = getFileName(filepath);
+//            obj.SetValueByFilename(lastname, content);
+//            //Log("load filepath : " + filepath + " = " + content + " len=" + content.length);
+//        }
+//    };
 
-    oReq.send(null);
-}
+//    oReq.send(null);
+//}
 
 function DataViewWrite1(dataView, offset, val) {
     dataView.setUint8(offset, val);
@@ -311,17 +320,17 @@ function deepCopyUint8Array(srcArray, begin, end) {
 }
 
 function deepWriteUint8Array(srcArray, subArray, offset) {
-  if (subArray === null || typeof subArray === 'undefined' || subArray === 'undefined') {
-    return
-  }
-  var isTyped = Array.isArray(srcArray);
-  if (isTyped) {
-    srcArray.set(subArray, offset);
-  } else {
-    for (var i = 0; i < subArray.length; i++) {
-      srcArray[i + offset] = subArray[i];
+    if (subArray === null || typeof subArray === 'undefined' || subArray === 'undefined') {
+        return
     }
-  }
+    var isTyped = Array.isArray(srcArray);
+    if (isTyped) {
+        srcArray.set(subArray, offset);
+    } else {
+        for (var i = 0; i < subArray.length; i++) {
+            srcArray[i + offset] = subArray[i];
+        }
+    }
 }
 
 var SIGNMASK = 0x8000;
@@ -569,7 +578,7 @@ var CmapModule = (function () {
         table4DataView.setUint16(TABLE4.LANGUAGE, 0) // language
         var segCount = segments2bytes.length + 1;
         table4DataView.setUint16(TABLE4.SegCountX2, (segCount * 2)); // segCountX2
-        var maxExponent = Math.floor(getBaseLog(2,segCount));
+        var maxExponent = Math.floor(getBaseLog(2, segCount));
         var searchRange = 2 * Math.pow(2, maxExponent);
         table4DataView.setUint16(TABLE4.SearchRange, searchRange); // searchRange
         table4DataView.setUint16(TABLE4.EntrySelector, maxExponent); // entrySelector
@@ -889,7 +898,7 @@ var Os2Module = (function () {
         offset = DataViewWrite2(Os2DataView, offset, yMax < 0 ? -yMax : yMax);
         offset = DataViewWrite2(Os2DataView, offset, yMin < 0 ? -yMin : yMin);
         Os2Array.set(OS2Table.subarray(78, 86), offset);
-        
+
         return Os2Array;
     }
     return Module;
@@ -1100,7 +1109,7 @@ var PostModule = (function () {
     }
 
     function toHex(d) {
-      return  ("0"+(Number(d).toString(16))).slice(-2).toUpperCase()
+        return ("0" + (Number(d).toString(16))).slice(-2).toUpperCase()
     }
     function pascalString(glyf) {
         var len = 0;
@@ -1757,7 +1766,7 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
     OS2.m_CorLength = OS2.m_Length + (4 - OS2.m_Length % 4) % 4;
     offset += OS2.m_CorLength;
     ttfTableEntryList.push(OS2);
-    //hhea的数据依赖于head和os/2
+    //hhea鐨勬暟鎹緷璧栦簬head鍜宱s/2
     hhea.m_DataBytes = HheaModule.createHheaTable5(hhea.m_DataBytes, TableTTFs.HheaTable, glyfsList, HeadModule.yMax, HeadModule.yMin);
     hhea.m_CheckSum = calc_checksum(hhea.m_DataBytes);
 
@@ -1827,7 +1836,7 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
     offset += post.m_CorLength;
     ttfTableEntryList.push(post);
 
-    //9-24日添加-保存灰度色
+    //9-24鏃ユ坊鍔�-淇濆瓨鐏板害鑹�
     if (TableTTFs.FpgmTable != null && TableTTFs.FpgmTable.length > 0) {
 
         //cvt_
@@ -1864,7 +1873,7 @@ function createTableEntryList(TableTTFs, glyfsList, offset, glyfsTotalSize, Err)
         ttfTableEntryList.push(prep);
 
         //gasp
-        if (TableTTFs.GaspTable == null || TableTTFs.GaspTable.length == 0)   //如果Gasp为空，则添加一个默认的
+        if (TableTTFs.GaspTable == null || TableTTFs.GaspTable.length == 0)   //濡傛灉Gasp涓虹┖锛屽垯娣诲姞涓€涓粯璁ょ殑
             TableTTFs.GaspTable = new Uint8Array([0, 1, 0, 1, 255, 255, 0, 10]);
         var gasp = new TableEntry();
         gasp.m_Tag = TAG.GASP;
@@ -1963,7 +1972,7 @@ function generateTTF(TableTTFs, glyfsList, Err) {
             headOffset = offset;
         }
         if (item.m_DataBytes === 'undefined' || typeof item.m_DataBytes === 'undefined') {
-          continue;
+            continue;
         }
         ttfArray.set(item.m_DataBytes, offset);
         // deepWriteUint8Array(ttfArray, item.m_DataBytes, offset);
@@ -1983,22 +1992,22 @@ function generateTTF(TableTTFs, glyfsList, Err) {
 var count_file = 1;
 function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
     var ttfArray = generateTTF(TableTTFs, TableGlyfsList, Err);
-    var container = document.getElementById('fonts');
-    var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
-    link.textContent = link.download = "test" + count_file + ".ttf";
-    link.href = buffer2url_woff(ttfArray);
-    count_file++;
+    //var container = document.getElementById('fonts');
+    //var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+    //link.textContent = link.download = "test" + count_file + ".ttf";
+    //link.href = buffer2url_woff(ttfArray);
+    //count_file++;
 
     var br = navigator.sayswho;
-    if (br.indexOf("IE") >= 0 || br.indexOf("Edge") >= 0) {
-      console.log("this is ie br");
-      var eotArray = Ttf2EotModule.ttf2eot(ttfArray);
-      var container = document.getElementById('fonts');
-      var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
-      link.textContent = link.download = "test" + count_file + ".eot";
-      link.href = buffer2url(eotArray,"vnd.ms-fontobject");
-      count_file++;
-      return eotArray;
+    if (br.indexOf("IE") >= 0 ) {
+        console.log("this is ie br");
+        var eotArray = Ttf2EotModule.ttf2eot(ttfArray);
+        //var container = document.getElementById('fonts');
+        //var link = container.insertBefore(document.createElement('a'), container.firstElementChild);
+        //link.textContent = link.download = "test" + count_file + ".eot";
+        //link.href = buffer2url(eotArray, "vnd.ms-fontobject");
+        //count_file++;
+        return eotArray;
     }
     return ttfArray;
     //var container = document.getElementById('fonts');
@@ -2012,7 +2021,7 @@ function generateTTFFile(TableTTFs, TableGlyfsList, Err) {
     //link.textContent = link.download = "test" + count_file + ".woff";
     //link.href = buffer2url_woff(woffArray);
     //count_file++;
-    
+
     //return woffArray;
 }
 
@@ -2025,24 +2034,25 @@ function readBlobAsDataURL(blob, callback, accesskey) {
 
 
 
-function createfontface(accesskey, woffArray) {
-  var br = navigator.sayswho;
-  var font_type = "font-ttf";
-  var format_type = "truetype";
-  var blob;
-  if (br.indexOf("IE") >= 0) {
-    format_type = "embedded-opentype";
-    blob = new Blob([woffArray.buffer], { type: 'application/vnd.ms-fontobject'});
-  } else {
-    blob = new Blob([woffArray], { type: 'application/font-ttf'});
-  }
+function createfontface(accesskey, woffArray,fontid) {
+    var br = navigator.sayswho;
+    var font_type = "font-ttf";
+    var format_type = "truetype";
+    var blob;
+    if (br.indexOf("IE") >= 0) {
+        format_type = "embedded-opentype";
+        blob = new Blob([woffArray.buffer], { type: 'application/vnd.ms-fontobject' });
+    } else {
+        blob = new Blob([woffArray], { type: 'application/font-ttf' });
+    }
     // var blob = new Blob([woffArray.buffer], { type: 'application/font-eot'});
     // var blob = new Blob([woffArray.buffer], { type: 'font/eot'});
     // var blob = new Blob([woffArray.buffer], { type: 'font/ttf'});
     readBlobAsDataURL(blob, function (basewoff) {
-        var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "' } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" + basewoff + "') format('" + format_type +"'); }  ";
-        // var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "'; } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" +"test26.eot" + "'); src:url('" +"test26.eot?#iefix" + "') format('" + format_type +"'); }  ";
-        // var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "'; } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" +"test26.eot?#iefix" + "') format('" + format_type +"'); }  ";
+        if (format_type == "embedded-opentype")
+            basewoff = basewoff + "?#iefix";
+        // var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "' } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" + basewoff + "') format('" + format_type +"'); }  ";
+        var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + fontid + "' } @font-face { font-family:'yzk-" + fontid + "'; src:url('" + basewoff + "') format('" + format_type + "'); }  ";
         var cssid = "yzk-" + accesskey;
         var stylelist = document.getElementsByName(cssid);
         if (stylelist.length > 0) {
@@ -2061,7 +2071,7 @@ function createfontface(accesskey, woffArray) {
         } else {
             t.appendChild(document.createTextNode(fontface))
         }
-    }, accesskey);
+    });
 
 
     //var basewoff = BASE64Module.fromByteArray(woffArray);
@@ -2086,15 +2096,30 @@ function createfontface(accesskey, woffArray) {
     //}
 
 }
-function chengfont(inputid, newaccessKey) {
-    var objinput = document.getElementById(inputid);
-    if (objinput) {
-        if (hasClass(objinput.className, "youziku")) {
-            var oldclass = objinput.className.trim().split(" ")[0];
-            objinput.className = objinput.className.replace(oldclass, "youziku-" + newaccessKey);
-            FontProcessModule.getInitFontInfo(newaccessKey);      
+function changefont(TagName, newaccessKey) {
+    
+    var listElm = document.getElementsByName(TagName);
+    
+    for (var i = 0; i < listElm.length; i++) {
+        
+        if (listElm[i].className === 'undefined') continue;
+        if (hasClass(listElm[i].className, "youziku"))
+        {
+            var oldclass = listElm[i].className.trim().split(" ")[0];
+            listElm[i].className = listElm[i].className.replace(oldclass, "youziku-" + newaccessKey);
+            FontProcessModule.getInitFontInfo(newaccessKey);
         }
     }
+
+
+    //var objinput = document.getElementById(inputid);
+    //if (objinput) {
+    //    if (hasClass(objinput.className, "youziku")) {
+    //        var oldclass = objinput.className.trim().split(" ")[0];
+    //        objinput.className = objinput.className.replace(oldclass, "youziku-" + newaccessKey);
+    //        FontProcessModule.getInitFontInfo(newaccessKey);
+    //    }
+    //}
 }
 
 // ================= main =======================
@@ -2104,12 +2129,12 @@ var globalFontId = 0;
 
 FontProcessModule = (function () {
     function Module() {
-        
+
     }
     var InitFontInfoURL = "http://fs.youziku.com/font/GetFontInfo";
     var GlyfsURL = "http://fs.youziku.com/font/GetFontGlyfs";
 
-    function submitData(URL, json, callback, key,accesskey) {
+    function submitData(URL, json, callback, key, accesskey) {
         var xhr = new createXHR();
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
@@ -2183,21 +2208,21 @@ FontProcessModule = (function () {
         ttfInfoMap.set(ttfInfo.Id, ttfInfo);
 
         if (!isSave) {
-          var fontId = ttfInfo.Id;
-          var cacheJson = store.get("cachefont_"+fontId);
-          if (cacheJson != null) {
-            var cacheObjs = JSON.parse(cacheJson);
-            for (var n in cacheObjs) {
-              var cacheGlyf = cacheObjs[n];
-              var glyf = new TableGlyfs();
-              glyf.Id = cacheGlyf.Id;
-              glyf.Unicode = cacheGlyf.Unicode;
-              glyf.HorizAdvX = cacheGlyf.HorizAdvX;
-              glyf.LSB = cacheGlyf.LSB;
-              glyf.GlyfTable = objectToUint8Array(cacheGlyf.GlyfTable);
-              glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
+            var fontId = ttfInfo.Id;
+            var cacheJson = store.get("cachefont_" + fontId);
+            if (cacheJson != null) {
+                var cacheObjs = JSON.parse(cacheJson);
+                for (var n in cacheObjs) {
+                    var cacheGlyf = cacheObjs[n];
+                    var glyf = new TableGlyfs();
+                    glyf.Id = cacheGlyf.Id;
+                    glyf.Unicode = cacheGlyf.Unicode;
+                    glyf.HorizAdvX = cacheGlyf.HorizAdvX;
+                    glyf.LSB = cacheGlyf.LSB;
+                    glyf.GlyfTable = objectToUint8Array(cacheGlyf.GlyfTable);
+                    glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
+                }
             }
-          }
         }
         if (isSave) {
             store.set(accessKey, json);
@@ -2208,21 +2233,21 @@ FontProcessModule = (function () {
             objs[n].setAttribute("accessKey", accessKey);
         }
         generateOneFont(ttfInfo.Id, accessKey);
-        ////初始化完成以后再检测一下，有无新字
+        ////鍒濆鍖栧畬鎴愪互鍚庡啀妫€娴嬩竴涓嬶紝鏈夋棤鏂板瓧
         var objs1 = yzkgetElementsByClass(accessKey);
-        for (var input in objs1) {            
+        for (var input in objs1) {
             var foid = objs[input].attributes['fontid'].nodeValue;
             var ataccessKey = objs[input].attributes['accessKey'].nodeValue;
             var fid = parseInt(foid);
             var fonts = objs[input].value;
-            
+
             var unicodes = new Array();
             for (var n in fonts) {
-                unicodes.push(fonts.charCodeAt(n));                
+                unicodes.push(fonts.charCodeAt(n));
             }
             FontProcessModule.getGlyfs(fid, unicodes, ataccessKey);
         }
-        
+
     }
     function processGlyfs(json, isSave, fontId, accessKey) {
         var glyfs = JSON.parse(json);
@@ -2245,7 +2270,7 @@ FontProcessModule = (function () {
         if (isSave) {
             store.set("cachefont_" + fontId, JSON.stringify(glyfInfoMap.getOneFontGlyfs(fontid)));
         }
-        generateOneFont(fontid,accessKey);
+        generateOneFont(fontid, accessKey);
     }
 
 
@@ -2257,7 +2282,7 @@ FontProcessModule = (function () {
         var glyfsList = glyfInfoMap.getOneFontGlyfs(fontid);
 
         var woffArray = generateTTFFile(ttfInfo, glyfsList, Err);
-        createfontface(accessKey, woffArray);
+        createfontface(accessKey, woffArray, fontid);
         return woffArray;
     }
     Module.getInitFontInfo = function (accessKey) {
@@ -2272,8 +2297,8 @@ FontProcessModule = (function () {
         }
     }
     Module.getGlyfs = function (fontid, unicodes, accessKey) {
-        
-        globalFontId = fontid;    
+
+        globalFontId = fontid;
         var needGetUnicodes = new Array();
 
         for (var n in unicodes) {
@@ -2314,7 +2339,7 @@ FontProcessModule = (function () {
             needGetUnicodes2 = needGetUnicodes;
         }
         if (needGetUnicodes2.length <= 0) {
-            return generateOneFont(globalFontId, accessKey);             
+            return generateOneFont(globalFontId, accessKey);
         }
         var req = new GlyfsReq(globalFontId, needGetUnicodes2);
         var json = JSON.stringify(req);
@@ -2341,203 +2366,203 @@ FontProcessModule = (function () {
 'use strict';
 
 
-var TYPED_OK =  (typeof Uint8Array !== 'undefined');
+var TYPED_OK = (typeof Uint8Array !== 'undefined');
 
 function createArray(size) {
-  return TYPED_OK ? new Uint8Array(size) : Array(size);
+    return TYPED_OK ? new Uint8Array(size) : Array(size);
 }
 
 
 function MicroBuffer(buffer, start, length) {
 
-  var isInherited = buffer instanceof MicroBuffer;
+    var isInherited = buffer instanceof MicroBuffer;
 
-  this.buffer = isInherited ?
-    buffer.buffer
-  :
-    (typeof buffer === 'number' ? createArray(buffer) : buffer);
+    this.buffer = isInherited ?
+      buffer.buffer
+    :
+      (typeof buffer === 'number' ? createArray(buffer) : buffer);
 
-  this.start = (start || 0) + (isInherited ? buffer.start : 0);
-  this.length = length || (this.buffer.length - this.start);
-  this.offset = 0;
+    this.start = (start || 0) + (isInherited ? buffer.start : 0);
+    this.length = length || (this.buffer.length - this.start);
+    this.offset = 0;
 
-  this.isTyped = !Array.isArray(this.buffer);
+    this.isTyped = !Array.isArray(this.buffer);
 }
 
 
 MicroBuffer.prototype.getUint8 = function (pos) {
-  return this.buffer[pos + this.start];
+    return this.buffer[pos + this.start];
 };
 
 
 MicroBuffer.prototype.getUint16 = function (pos, littleEndian) {
-  var val;
-  if (littleEndian) {
-    throw new Error('not implemented');
-  } else {
-    val = this.buffer[pos + 1 + this.start];
-    val += this.buffer[pos + this.start] << 8 >>> 0;
-  }
-  return val;
+    var val;
+    if (littleEndian) {
+        throw new Error('not implemented');
+    } else {
+        val = this.buffer[pos + 1 + this.start];
+        val += this.buffer[pos + this.start] << 8 >>> 0;
+    }
+    return val;
 };
 
 
 MicroBuffer.prototype.getUint32 = function (pos, littleEndian) {
-  var val;
-  if (littleEndian) {
-    throw new Error('not implemented');
-  } else {
-    val = this.buffer[pos + 1 + this.start] << 16;
-    val |= this.buffer[pos + 2 + this.start] << 8;
-    val |= this.buffer[pos + 3 + this.start];
-    val += this.buffer[pos + this.start] << 24 >>> 0;
-  }
-  return val;
+    var val;
+    if (littleEndian) {
+        throw new Error('not implemented');
+    } else {
+        val = this.buffer[pos + 1 + this.start] << 16;
+        val |= this.buffer[pos + 2 + this.start] << 8;
+        val |= this.buffer[pos + 3 + this.start];
+        val += this.buffer[pos + this.start] << 24 >>> 0;
+    }
+    return val;
 };
 
 
 MicroBuffer.prototype.setUint8 = function (pos, value) {
-  this.buffer[pos + this.start] = value & 0xFF;
+    this.buffer[pos + this.start] = value & 0xFF;
 };
 
 
 MicroBuffer.prototype.setUint16 = function (pos, value, littleEndian) {
-  var offset = pos + this.start;
-  var buf = this.buffer;
-  if (littleEndian) {
-    buf[offset] = value & 0xFF;
-    buf[offset + 1] = (value >>> 8) & 0xFF;
-  } else {
-    buf[offset] = (value >>> 8) & 0xFF;
-    buf[offset + 1] = value & 0xFF;
-  }
+    var offset = pos + this.start;
+    var buf = this.buffer;
+    if (littleEndian) {
+        buf[offset] = value & 0xFF;
+        buf[offset + 1] = (value >>> 8) & 0xFF;
+    } else {
+        buf[offset] = (value >>> 8) & 0xFF;
+        buf[offset + 1] = value & 0xFF;
+    }
 };
 
 
 MicroBuffer.prototype.setUint32 = function (pos, value, littleEndian) {
-  var offset = pos + this.start;
-  var buf = this.buffer;
-  if (littleEndian) {
-    buf[offset] = value & 0xFF;
-    buf[offset + 1] = (value >>> 8) & 0xFF;
-    buf[offset + 2] = (value >>> 16) & 0xFF;
-    buf[offset + 3] = (value >>> 24) & 0xFF;
-  } else {
-    buf[offset] = (value >>> 24) & 0xFF;
-    buf[offset + 1] = (value >>> 16) & 0xFF;
-    buf[offset + 2] = (value >>> 8) & 0xFF;
-    buf[offset + 3] = value & 0xFF;
-  }
+    var offset = pos + this.start;
+    var buf = this.buffer;
+    if (littleEndian) {
+        buf[offset] = value & 0xFF;
+        buf[offset + 1] = (value >>> 8) & 0xFF;
+        buf[offset + 2] = (value >>> 16) & 0xFF;
+        buf[offset + 3] = (value >>> 24) & 0xFF;
+    } else {
+        buf[offset] = (value >>> 24) & 0xFF;
+        buf[offset + 1] = (value >>> 16) & 0xFF;
+        buf[offset + 2] = (value >>> 8) & 0xFF;
+        buf[offset + 3] = value & 0xFF;
+    }
 };
 
 
 MicroBuffer.prototype.writeUint8 = function (value) {
-  this.buffer[this.offset + this.start] = value & 0xFF;
-  this.offset++;
+    this.buffer[this.offset + this.start] = value & 0xFF;
+    this.offset++;
 };
 
 
 MicroBuffer.prototype.writeInt8 = function (value) {
-  this.setUint8(this.offset, (value < 0) ? 0xFF + value + 1 : value);
-  this.offset++;
+    this.setUint8(this.offset, (value < 0) ? 0xFF + value + 1 : value);
+    this.offset++;
 };
 
 
 MicroBuffer.prototype.writeUint16 = function (value, littleEndian) {
-  this.setUint16(this.offset, value, littleEndian);
-  this.offset += 2;
+    this.setUint16(this.offset, value, littleEndian);
+    this.offset += 2;
 };
 
 
 MicroBuffer.prototype.writeInt16 = function (value, littleEndian) {
-  this.setUint16(this.offset, (value < 0) ? 0xFFFF + value + 1 : value, littleEndian);
-  this.offset += 2;
+    this.setUint16(this.offset, (value < 0) ? 0xFFFF + value + 1 : value, littleEndian);
+    this.offset += 2;
 };
 
 
 MicroBuffer.prototype.writeUint32 = function (value, littleEndian) {
-  this.setUint32(this.offset, value, littleEndian);
-  this.offset += 4;
+    this.setUint32(this.offset, value, littleEndian);
+    this.offset += 4;
 };
 
 
 MicroBuffer.prototype.writeInt32 = function (value, littleEndian) {
-  this.setUint32(this.offset, (value < 0) ? 0xFFFFFFFF + value + 1 : value, littleEndian);
-  this.offset += 4;
+    this.setUint32(this.offset, (value < 0) ? 0xFFFFFFFF + value + 1 : value, littleEndian);
+    this.offset += 4;
 };
 
 
 // get current position
 //
 MicroBuffer.prototype.tell = function () {
-  return this.offset;
+    return this.offset;
 };
 
 
 // set current position
 //
 MicroBuffer.prototype.seek = function (pos) {
-  this.offset = pos;
+    this.offset = pos;
 };
 
 
 MicroBuffer.prototype.fill = function (value) {
-  var index = this.length - 1;
-  while (index >= 0) {
-    this.buffer[index + this.start] = value;
-    index--;
-  }
+    var index = this.length - 1;
+    while (index >= 0) {
+        this.buffer[index + this.start] = value;
+        index--;
+    }
 };
 
 
 MicroBuffer.prototype.writeUint64 = function (value) {
-  // we canot use bitwise operations for 64bit values because of JavaScript limitations,
-  // instead we should divide it to 2 Int32 numbers
-  // 2^32 = 4294967296
-  var hi = Math.floor(value / 4294967296);
-  var lo = value - hi * 4294967296;
-  this.writeUint32(hi);
-  this.writeUint32(lo);
+    // we canot use bitwise operations for 64bit values because of JavaScript limitations,
+    // instead we should divide it to 2 Int32 numbers
+    // 2^32 = 4294967296
+    var hi = Math.floor(value / 4294967296);
+    var lo = value - hi * 4294967296;
+    this.writeUint32(hi);
+    this.writeUint32(lo);
 };
 
 
 MicroBuffer.prototype.writeBytes = function (data) {
-  var buffer = this.buffer;
-  var offset = this.offset + this.start;
-  if (this.isTyped) {
-    buffer.set(data, offset);
-  } else {
-    for (var i = 0; i < data.length; i++) {
-      buffer[i + offset] = data[i];
+    var buffer = this.buffer;
+    var offset = this.offset + this.start;
+    if (this.isTyped) {
+        buffer.set(data, offset);
+    } else {
+        for (var i = 0; i < data.length; i++) {
+            buffer[i + offset] = data[i];
+        }
     }
-  }
-  this.offset += data.length;
+    this.offset += data.length;
 };
 
 
 MicroBuffer.prototype.toString = function (offset, length) {
-  // default values if not set
-  offset = (offset || 0);
-  length = length || (this.length - offset);
+    // default values if not set
+    offset = (offset || 0);
+    length = length || (this.length - offset);
 
-  // add buffer shift
-  var start = offset + this.start;
-  var end = start + length;
+    // add buffer shift
+    var start = offset + this.start;
+    var end = start + length;
 
-  var string = '';
-  for (var i = start; i < end; i++) {
-    string += String.fromCharCode(this.buffer[i]);
-  }
-  return string;
+    var string = '';
+    for (var i = start; i < end; i++) {
+        string += String.fromCharCode(this.buffer[i]);
+    }
+    return string;
 };
 
 
 MicroBuffer.prototype.toArray = function () {
-  if (this.isTyped) {
-    return this.buffer.subarray(this.start, this.start + this.length);
-  }
+    if (this.isTyped) {
+        return this.buffer.subarray(this.start, this.start + this.length);
+    }
 
-  return this.buffer.slice(this.start, this.start + this.length);
+    return this.buffer.slice(this.start, this.start + this.length);
 };
 
 var ByteBuffer = MicroBuffer;
@@ -2546,273 +2571,253 @@ var ByteBuffer = MicroBuffer;
 //
 
 var Ttf2EotModule = (function () {
-  function Module() {
-  }
-/**
- * Offsets in EOT file structure. Refer to EOTPrefix in OpenTypeUtilities.cpp
- */
-var EOT_OFFSET = {
-  LENGTH:         0,
-  FONT_LENGTH:    4,
-  VERSION:        8,
-  CHARSET:        26,
-  MAGIC:          34,
-  FONT_PANOSE:    16,
-  ITALIC:         27,
-  WEIGHT:         28,
-  UNICODE_RANGE:  36,
-  CODEPAGE_RANGE: 52,
-  CHECKSUM_ADJUSTMENT: 60
-};
-
-/**
- * Offsets in different SFNT (TTF) structures. See OpenTypeUtilities.cpp
- */
-var SFNT_OFFSET = {
-    // sfntHeader:
-  NUMTABLES:      4,
-
-    // TableDirectoryEntry
-  TABLE_TAG:      0,
-  TABLE_OFFSET:   8,
-  TABLE_LENGTH:   12,
-
-    // OS2Table
-  OS2_WEIGHT:         4,
-  OS2_FONT_PANOSE:    32,
-  OS2_UNICODE_RANGE:  42,
-  OS2_FS_SELECTION:   62,
-  OS2_CODEPAGE_RANGE: 78,
-
-    // headTable
-  HEAD_CHECKSUM_ADJUSTMENT:   8,
-
-    // nameTable
-  NAMETABLE_FORMAT:   0,
-  NAMETABLE_COUNT:    2,
-  NAMETABLE_STRING_OFFSET:    4,
-
-    // nameRecord
-  NAME_PLATFORM_ID:   0,
-  NAME_ENCODING_ID:   2,
-  NAME_LANGUAGE_ID:   4,
-  NAME_NAME_ID:       6,
-  NAME_LENGTH:        8,
-  NAME_OFFSET:        10
-};
-
-/**
- * Sizes of structures
- */
-var SIZEOF = {
-  SFNT_TABLE_ENTRY:   16,
-  SFNT_HEADER:        12,
-  SFNT_NAMETABLE:          6,
-  SFNT_NAMETABLE_ENTRY:    12,
-  EOT_PREFIX: 82
-};
-
-/**
- * Magic numbers
- */
-var MAGIC = {
-  EOT_VERSION:    0x00020001,
-  EOT_MAGIC:      0x504c,
-  EOT_CHARSET:    1,
-  LANGUAGE_ENGLISH:   0x0409
-};
-
-/**
- * Utility function to convert buffer of utf16be chars to buffer of utf16le
- * chars prefixed with length and suffixed with zero
- */
-function strbuf(str) {
-  var b = new ByteBuffer(str.length + 4);
-
-  b.setUint16 (0, str.length, true);
-
-  for (var i = 0; i < str.length; i += 2) {
-    b.setUint16 (i + 2, str.getUint16 (i), true);
-  }
-
-  b.setUint16 (b.length - 2, 0, true);
-
-  return b;
-}
-
-// Takes TTF font on input and returns ByteBuffer with EOT font
-//
-// Params:
-//
-// - arr(Array|Uint8Array)
-//
-Module.ttf2eot = function(arr) {
-  var buf = new ByteBuffer(arr);
-  var out = new ByteBuffer(SIZEOF.EOT_PREFIX),
-  i, j;
-
-  out.fill(0);
-  out.setUint32(EOT_OFFSET.FONT_LENGTH, buf.length, true);
-  out.setUint32(EOT_OFFSET.VERSION, MAGIC.EOT_VERSION, true);
-  out.setUint8(EOT_OFFSET.CHARSET, MAGIC.EOT_CHARSET);
-  out.setUint16(EOT_OFFSET.MAGIC, MAGIC.EOT_MAGIC, true);
-
-  var familyName = [],
-  subfamilyName = [],
-  fullName = [],
-  versionString = [];
-
-  var haveOS2 = false,
-  haveName = false,
-  haveHead = false;
-
-  var numTables = buf.getUint16 (SFNT_OFFSET.NUMTABLES);
-
-  for (i = 0; i < numTables; ++i) {
-    var data = new ByteBuffer(buf, SIZEOF.SFNT_HEADER + i * SIZEOF.SFNT_TABLE_ENTRY);
-    var tableEntry = {
-      tag: data.toString (SFNT_OFFSET.TABLE_TAG, 4),
-      offset: data.getUint32 (SFNT_OFFSET.TABLE_OFFSET),
-      length: data.getUint32 (SFNT_OFFSET.TABLE_LENGTH)
+    function Module() {
+    }
+    /**
+     * Offsets in EOT file structure. Refer to EOTPrefix in OpenTypeUtilities.cpp
+     */
+    var EOT_OFFSET = {
+        LENGTH: 0,
+        FONT_LENGTH: 4,
+        VERSION: 8,
+        CHARSET: 26,
+        MAGIC: 34,
+        FONT_PANOSE: 16,
+        ITALIC: 27,
+        WEIGHT: 28,
+        UNICODE_RANGE: 36,
+        CODEPAGE_RANGE: 52,
+        CHECKSUM_ADJUSTMENT: 60
     };
 
-    var table = new ByteBuffer(buf, tableEntry.offset, tableEntry.length);
+    /**
+     * Offsets in different SFNT (TTF) structures. See OpenTypeUtilities.cpp
+     */
+    var SFNT_OFFSET = {
+        // sfntHeader:
+        NUMTABLES: 4,
 
-    if (tableEntry.tag === 'OS/2') {
-      haveOS2 = true;
+        // TableDirectoryEntry
+        TABLE_TAG: 0,
+        TABLE_OFFSET: 8,
+        TABLE_LENGTH: 12,
 
-      for (j = 0; j < 10; ++j) {
-        out.setUint8 (EOT_OFFSET.FONT_PANOSE + j, table.getUint8 (SFNT_OFFSET.OS2_FONT_PANOSE + j));
-      }
+        // OS2Table
+        OS2_WEIGHT: 4,
+        OS2_FONT_PANOSE: 32,
+        OS2_UNICODE_RANGE: 42,
+        OS2_FS_SELECTION: 62,
+        OS2_CODEPAGE_RANGE: 78,
 
-      /*jshint bitwise:false */
-      out.setUint8 (EOT_OFFSET.ITALIC, table.getUint16 (SFNT_OFFSET.OS2_FS_SELECTION) & 0x01);
-      out.setUint32 (EOT_OFFSET.WEIGHT, table.getUint16 (SFNT_OFFSET.OS2_WEIGHT), true);
+        // headTable
+        HEAD_CHECKSUM_ADJUSTMENT: 8,
 
-      for (j = 0; j < 4; ++j) {
-        out.setUint32 (EOT_OFFSET.UNICODE_RANGE + j * 4, table.getUint32 (SFNT_OFFSET.OS2_UNICODE_RANGE + j * 4), true);
-      }
+        // nameTable
+        NAMETABLE_FORMAT: 0,
+        NAMETABLE_COUNT: 2,
+        NAMETABLE_STRING_OFFSET: 4,
 
-      for (j = 0; j < 2; ++j) {
-        out.setUint32 (EOT_OFFSET.CODEPAGE_RANGE + j * 4, table.getUint32 (SFNT_OFFSET.OS2_CODEPAGE_RANGE + j * 4), true);
-      }
+        // nameRecord
+        NAME_PLATFORM_ID: 0,
+        NAME_ENCODING_ID: 2,
+        NAME_LANGUAGE_ID: 4,
+        NAME_NAME_ID: 6,
+        NAME_LENGTH: 8,
+        NAME_OFFSET: 10
+    };
 
-    } else if (tableEntry.tag === 'head') {
+    /**
+     * Sizes of structures
+     */
+    var SIZEOF = {
+        SFNT_TABLE_ENTRY: 16,
+        SFNT_HEADER: 12,
+        SFNT_NAMETABLE: 6,
+        SFNT_NAMETABLE_ENTRY: 12,
+        EOT_PREFIX: 82
+    };
 
-      haveHead = true;
-      out.setUint32 (EOT_OFFSET.CHECKSUM_ADJUSTMENT, table.getUint32 (SFNT_OFFSET.HEAD_CHECKSUM_ADJUSTMENT), true);
+    /**
+     * Magic numbers
+     */
+    var MAGIC = {
+        EOT_VERSION: 0x00020001,
+        EOT_MAGIC: 0x504c,
+        EOT_CHARSET: 1,
+        LANGUAGE_ENGLISH: 0x0409
+    };
 
-    } else if (tableEntry.tag === 'name') {
+    /**
+     * Utility function to convert buffer of utf16be chars to buffer of utf16le
+     * chars prefixed with length and suffixed with zero
+     */
+    function strbuf(str) {
+        var b = new ByteBuffer(str.length + 4);
 
-      haveName = true;
+        b.setUint16(0, str.length, true);
 
-      var nameTable = {
-        format: table.getUint16 (SFNT_OFFSET.NAMETABLE_FORMAT),
-        count: table.getUint16 (SFNT_OFFSET.NAMETABLE_COUNT),
-        stringOffset: table.getUint16 (SFNT_OFFSET.NAMETABLE_STRING_OFFSET)
-      };
-
-      for (j = 0; j < nameTable.count; ++j) {
-        var nameRecord = new ByteBuffer(table, SIZEOF.SFNT_NAMETABLE + j * SIZEOF.SFNT_NAMETABLE_ENTRY);
-        var name = {
-          platformID: nameRecord.getUint16 (SFNT_OFFSET.NAME_PLATFORM_ID),
-          encodingID: nameRecord.getUint16 (SFNT_OFFSET.NAME_ENCODING_ID),
-          languageID: nameRecord.getUint16 (SFNT_OFFSET.NAME_LANGUAGE_ID),
-          nameID: nameRecord.getUint16 (SFNT_OFFSET.NAME_NAME_ID),
-          length: nameRecord.getUint16 (SFNT_OFFSET.NAME_LENGTH),
-          offset: nameRecord.getUint16 (SFNT_OFFSET.NAME_OFFSET)
-        };
-
-        if (name.platformID === 3 && name.encodingID === 1 && name.languageID === MAGIC.LANGUAGE_ENGLISH) {
-          var s = strbuf (new ByteBuffer(table, nameTable.stringOffset + name.offset, name.length));
-
-          switch (name.nameID) {
-            case 1:
-              familyName = s;
-              break;
-            case 2:
-              subfamilyName = s;
-              break;
-            case 4:
-              fullName = s;
-              break;
-            case 5:
-              versionString = s;
-              break;
-          }
+        for (var i = 0; i < str.length; i += 2) {
+            b.setUint16(i + 2, str.getUint16(i), true);
         }
-      }
+
+        b.setUint16(b.length - 2, 0, true);
+
+        return b;
     }
-    if (haveOS2 && haveName && haveHead) { break; }
-  }
 
-  if (!(haveOS2 && haveName && haveHead)) {
-    throw new Error ('Required section not found');
-  }
+    // Takes TTF font on input and returns ByteBuffer with EOT font
+    //
+    // Params:
+    //
+    // - arr(Array|Uint8Array)
+    //
+    Module.ttf2eot = function (arr) {
+        var buf = new ByteBuffer(arr);
+        var out = new ByteBuffer(SIZEOF.EOT_PREFIX),
+        i, j;
 
-  // Calculate final length
-  var len =
-    out.length +
-    familyName.length +
-    subfamilyName.length +
-    versionString.length +
-    fullName.length +
-    2 +
-    buf.length;
+        out.fill(0);
+        out.setUint32(EOT_OFFSET.FONT_LENGTH, buf.length, true);
+        out.setUint32(EOT_OFFSET.VERSION, MAGIC.EOT_VERSION, true);
+        out.setUint8(EOT_OFFSET.CHARSET, MAGIC.EOT_CHARSET);
+        out.setUint16(EOT_OFFSET.MAGIC, MAGIC.EOT_MAGIC, true);
 
-  // Create final buffer with the the same array type as input one.
-  var eot = new ByteBuffer(len);
+        var familyName = [],
+        subfamilyName = [],
+        fullName = [],
+        versionString = [];
 
-  eot.writeBytes(out.buffer);
-  eot.writeBytes(familyName.buffer);
-  eot.writeBytes(subfamilyName.buffer);
-  eot.writeBytes(versionString.buffer);
-  eot.writeBytes(fullName.buffer);
-  eot.writeBytes([ 0, 0 ]);
-  eot.writeBytes(buf.buffer);
+        var haveOS2 = false,
+        haveName = false,
+        haveHead = false;
 
-  eot.setUint32(EOT_OFFSET.LENGTH, len, true); // Calculate overall length
+        var numTables = buf.getUint16(SFNT_OFFSET.NUMTABLES);
 
-  return eot;
-}
+        for (i = 0; i < numTables; ++i) {
+            var data = new ByteBuffer(buf, SIZEOF.SFNT_HEADER + i * SIZEOF.SFNT_TABLE_ENTRY);
+            var tableEntry = {
+                tag: data.toString(SFNT_OFFSET.TABLE_TAG, 4),
+                offset: data.getUint32(SFNT_OFFSET.TABLE_OFFSET),
+                length: data.getUint32(SFNT_OFFSET.TABLE_LENGTH)
+            };
 
-return Module;
+            var table = new ByteBuffer(buf, tableEntry.offset, tableEntry.length);
+
+            if (tableEntry.tag === 'OS/2') {
+                haveOS2 = true;
+
+                for (j = 0; j < 10; ++j) {
+                    out.setUint8(EOT_OFFSET.FONT_PANOSE + j, table.getUint8(SFNT_OFFSET.OS2_FONT_PANOSE + j));
+                }
+
+                /*jshint bitwise:false */
+                out.setUint8(EOT_OFFSET.ITALIC, table.getUint16(SFNT_OFFSET.OS2_FS_SELECTION) & 0x01);
+                out.setUint32(EOT_OFFSET.WEIGHT, table.getUint16(SFNT_OFFSET.OS2_WEIGHT), true);
+
+                for (j = 0; j < 4; ++j) {
+                    out.setUint32(EOT_OFFSET.UNICODE_RANGE + j * 4, table.getUint32(SFNT_OFFSET.OS2_UNICODE_RANGE + j * 4), true);
+                }
+
+                for (j = 0; j < 2; ++j) {
+                    out.setUint32(EOT_OFFSET.CODEPAGE_RANGE + j * 4, table.getUint32(SFNT_OFFSET.OS2_CODEPAGE_RANGE + j * 4), true);
+                }
+
+            } else if (tableEntry.tag === 'head') {
+
+                haveHead = true;
+                out.setUint32(EOT_OFFSET.CHECKSUM_ADJUSTMENT, table.getUint32(SFNT_OFFSET.HEAD_CHECKSUM_ADJUSTMENT), true);
+
+            } else if (tableEntry.tag === 'name') {
+
+                haveName = true;
+
+                var nameTable = {
+                    format: table.getUint16(SFNT_OFFSET.NAMETABLE_FORMAT),
+                    count: table.getUint16(SFNT_OFFSET.NAMETABLE_COUNT),
+                    stringOffset: table.getUint16(SFNT_OFFSET.NAMETABLE_STRING_OFFSET)
+                };
+
+                for (j = 0; j < nameTable.count; ++j) {
+                    var nameRecord = new ByteBuffer(table, SIZEOF.SFNT_NAMETABLE + j * SIZEOF.SFNT_NAMETABLE_ENTRY);
+                    var name = {
+                        platformID: nameRecord.getUint16(SFNT_OFFSET.NAME_PLATFORM_ID),
+                        encodingID: nameRecord.getUint16(SFNT_OFFSET.NAME_ENCODING_ID),
+                        languageID: nameRecord.getUint16(SFNT_OFFSET.NAME_LANGUAGE_ID),
+                        nameID: nameRecord.getUint16(SFNT_OFFSET.NAME_NAME_ID),
+                        length: nameRecord.getUint16(SFNT_OFFSET.NAME_LENGTH),
+                        offset: nameRecord.getUint16(SFNT_OFFSET.NAME_OFFSET)
+                    };
+
+                    if (name.platformID === 3 && name.encodingID === 1 && name.languageID === MAGIC.LANGUAGE_ENGLISH) {
+                        var s = strbuf(new ByteBuffer(table, nameTable.stringOffset + name.offset, name.length));
+
+                        switch (name.nameID) {
+                            case 1:
+                                familyName = s;
+                                break;
+                            case 2:
+                                subfamilyName = s;
+                                break;
+                            case 4:
+                                fullName = s;
+                                break;
+                            case 5:
+                                versionString = s;
+                                break;
+                        }
+                    }
+                }
+            }
+            if (haveOS2 && haveName && haveHead) { break; }
+        }
+
+        if (!(haveOS2 && haveName && haveHead)) {
+            throw new Error('Required section not found');
+        }
+
+        // Calculate final length
+        var len =
+          out.length +
+          familyName.length +
+          subfamilyName.length +
+          versionString.length +
+          fullName.length +
+          2 +
+          buf.length;
+
+        // Create final buffer with the the same array type as input one.
+        var eot = new ByteBuffer(len);
+
+        eot.writeBytes(out.buffer);
+        eot.writeBytes(familyName.buffer);
+        eot.writeBytes(subfamilyName.buffer);
+        eot.writeBytes(versionString.buffer);
+        eot.writeBytes(fullName.buffer);
+        eot.writeBytes([0, 0]);
+        eot.writeBytes(buf.buffer);
+
+        eot.setUint32(EOT_OFFSET.LENGTH, len, true); // Calculate overall length
+
+        return eot;
+    }
+
+    return Module;
 }());
 
-navigator.sayswho= (function(){
-    var ua= navigator.userAgent, tem, 
-    M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-    if(/trident/i.test(M[1])){
-        tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
-        return 'IE '+(tem[1] || '');
+navigator.sayswho = (function () {
+    var ua = navigator.userAgent, tem,
+    M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+    if (/trident/i.test(M[1])) {
+        tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+        return 'IE ' + (tem[1] || '');
     }
-    if(M[1]=== 'Chrome'){
-        tem= ua.match(/\b(OPR|Edge)\/(\d+)/);
-        if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+    if (M[1] === 'Chrome') {
+        tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
+        if (tem != null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
     }
-    M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
-    if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
+    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    if ((tem = ua.match(/version\/(\d+)/i)) != null) M.splice(1, 1, tem[1]);
     return M.join(' ');
 })();
 // navigator.sayswho = "Chrome";
 // navigator.sayswho = "IE";
-function myBrowser(){
-  var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
-  var isOpera = userAgent.indexOf("Opera") > -1;
-  if (isOpera) {
-    return "Opera"
-  }; //判断是否Opera浏览器
-  if (userAgent.indexOf("Firefox") > -1) {
-    return "FF";
-  } //判断是否Firefox浏览器
-  if (userAgent.indexOf("Chrome") > -1){
-    return "Chrome";
-  }
-  if (userAgent.indexOf("Safari") > -1) {
-    return "Safari";
-  } //判断是否Safari浏览器
-  if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
-    return "IE";
-  }; //判断是否IE浏览器
-  return "IE";
-}
