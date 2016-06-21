@@ -85,8 +85,8 @@ var BASE64Module = (function () {
     var revLookup = []
     var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
 
+    var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     function base64_init() {
-        var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
         for (var i = 0, len = code.length; i < len; ++i) {
             lookup[i] = code[i]
             revLookup[code.charCodeAt(i)] = i
@@ -156,46 +156,73 @@ var BASE64Module = (function () {
     //    }
     //    return output.join('')
     //}
-    //Module.fromByteArray = function (raw) {
-    //    var base64 = '';
-    //    var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-    //    var bytes = new Uint8Array(raw);
-    //    var byteLength = bytes.byteLength;
-    //    var byteRemainder = byteLength % 3;
-    //    var mainLength = byteLength - byteRemainder;
-    //    var a, b, c, d;
-    //    var chunk;
+    var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    var maxLen = 100*1024;
+    var arrBuf = new Array(maxLen);
+    Module.fromByteArray = function (raw) {
+        var base64 = '';
+        var bytes = new Uint8Array(raw);
+        var byteLength = bytes.byteLength;
+        var byteRemainder = byteLength % 3;
+        var mainLength = byteLength - byteRemainder;
+        var destLen = mainLength / 3 * 4;
+        if (byteRemainder > 0) {
+          destLen += 4;
+        }
+        if (destLen > maxLen) {
+          maxLen = destLen + 1;
+          arrBuf = new Array(maxLen);
+        }
+        var a, b, c, d;
+        var k = 0;
+        var chunk;
 
-    //    // Main loop deals with bytes in chunks of 3
-    //    for (var i = 0; i < mainLength; i = i + 3) {
-    //        // Combine the three bytes into a single integer
-    //        chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
-    //        // Use bitmasks to extract 6-bit segments from the triplet
-    //        a = (chunk & 16515072) >> 18; // 16515072 = (2^6 - 1) << 18
-    //        b = (chunk & 258048) >> 12; // 258048 = (2^6 - 1) << 12
-    //        c = (chunk & 4032) >> 6; // 4032 = (2^6 - 1) << 6
-    //        d = chunk & 63; // 63 = 2^6 - 1
-    //        // Convert the raw binary segments to the appropriate ASCII encoding
-    //        base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
-    //    }
-    //    // Deal with the remaining bytes and padding
-    //    if (byteRemainder == 1) {
-    //        chunk = bytes[mainLength];
-    //        a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2;
-    //        // Set the 4 least significant bits to zero
-    //        b = (chunk & 3) << 4 // 3 = 2^2 - 1;
-    //        base64 += encodings[a] + encodings[b] + '==';
-    //    }
-    //    else if (byteRemainder == 2) {
-    //        chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
-    //        a = (chunk & 16128) >> 8 // 16128 = (2^6 - 1) << 8;
-    //        b = (chunk & 1008) >> 4 // 1008 = (2^6 - 1) << 4;
-    //        // Set the 2 least significant bits to zero
-    //        c = (chunk & 15) << 2 // 15 = 2^4 - 1;
-    //        base64 += encodings[a] + encodings[b] + encodings[c] + '=';
-    //    }
-    //    return base64;
-    //}
+        // Main loop deals with bytes in chunks of 3
+        for (var i = 0; i < mainLength; i = i + 3) {
+            // Combine the three bytes into a single integer
+            chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+            // Use bitmasks to extract 6-bit segments from the triplet
+            a = (chunk & 16515072) >> 18; // 16515072 = (2^6 - 1) << 18
+            b = (chunk & 258048) >> 12; // 258048 = (2^6 - 1) << 12
+            c = (chunk & 4032) >> 6; // 4032 = (2^6 - 1) << 6
+            d = chunk & 63; // 63 = 2^6 - 1
+            // Convert the raw binary segments to the appropriate ASCII encoding
+            // base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
+            arrBuf[k] = encodings[a];
+            arrBuf[k+1] = encodings[b];
+            arrBuf[k+2] = encodings[c];
+            arrBuf[k+3] = encodings[d];
+            k+=4;
+        }
+        // Deal with the remaining bytes and padding
+        if (byteRemainder == 1) {
+            chunk = bytes[mainLength];
+            a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2;
+            // Set the 4 least significant bits to zero
+            b = (chunk & 3) << 4 // 3 = 2^2 - 1;
+            // base64 += encodings[a] + encodings[b] + '==';
+            arrBuf[k] = encodings[a];
+            arrBuf[k + 1] = encodings[b];
+            arrBuf[k+2] = '=';
+            arrBuf[k+3] = '=';
+            k+=4;
+        }
+        else if (byteRemainder == 2) {
+            chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
+            a = (chunk & 16128) >> 8 // 16128 = (2^6 - 1) << 8;
+            b = (chunk & 1008) >> 4 // 1008 = (2^6 - 1) << 4;
+            // Set the 2 least significant bits to zero
+            c = (chunk & 15) << 2 // 15 = 2^4 - 1;
+            // base64 += encodings[a] + encodings[b] + encodings[c] + '=';
+            arrBuf[k] = encodings[a];
+            arrBuf[k + 1] = encodings[b];
+            arrBuf[k+2] = encodings[c];
+            arrBuf[k+3] = '=';
+            k+=4;
+        }
+        var destArray = deepCopyArray(arrBuf, 0, destLen);
+        return destArray.join('');
+    }
     return Module;
 }());
 
@@ -312,6 +339,20 @@ function deepCopyUint8Array(srcArray, begin, end) {
         return new Uint8Array();
     }
     destArray = new Uint8Array(size);
+
+    for (var i = begin; i < end && i < srcArray.length; i++) {
+        destArray[i - begin] = srcArray[i];
+    }
+    return destArray;
+}
+
+function deepCopyArray(srcArray, begin, end) {
+    var destArray;
+    var size = end - begin;
+    if (size <= 0) {
+        return new Array();
+    }
+    destArray = new Array(size);
 
     for (var i = begin; i < end && i < srcArray.length; i++) {
         destArray[i - begin] = srcArray[i];
@@ -2032,27 +2073,64 @@ function readBlobAsDataURL(blob, callback, accesskey) {
 }
 //example:
 
-
+function check_equal(sa, sb) {
+  var la = sa.length;
+  var lb = sb.length;
+  var len = la;
+  var equal = 1;
+  if (la != lb) {
+    equal = 0;
+    console.log("len not equal " + la +" " + lb);
+    if (la > lb) {
+      console.log("reverse");
+      check_equal(sb, sa);
+      return;
+    }
+  }
+  console.log("len = "+ len);
+  var i;
+  for (i = 0; i < len; i++) {
+    if (sa[i] != sb[i]) {
+      equal = 0;
+      console.log(" " + i + " " + sa[i] + " " + sb[i]);
+    }
+  }
+  for (;i < lb; i++) {
+     console.log("left " + i + " " + sb[i]);
+  }
+  if (equal == 0) {
+    console.log("not equal");
+  } else {
+    console.log("equal");
+  }
+}
 
 function createfontface(accesskey, woffArray,fontid) {
     var br = navigator.sayswho;
     var font_type = "font-ttf";
     var format_type = "truetype";
     var blob;
+    // if (br.indexOf("IE") >= 0) {
+    //     format_type = "embedded-opentype";
+    //     blob = new Blob([woffArray.buffer], { type: 'application/vnd.ms-fontobject' });
+    // } else {
+    //     blob = new Blob([woffArray], { type: 'application/font-ttf' });
+    // }
+    var basestr = BASE64Module.fromByteArray(woffArray);
     if (br.indexOf("IE") >= 0) {
-        format_type = "embedded-opentype";
-        blob = new Blob([woffArray.buffer], { type: 'application/vnd.ms-fontobject' });
+      format_type = "embedded-opentype";
+      basestr = 'application/vnd.ms-fontobject;base64,' + basestr + "?#iefix";
     } else {
-        blob = new Blob([woffArray], { type: 'application/font-ttf' });
+      basestr = "data:application/font-ttf;base64,"+basestr;
     }
     // var blob = new Blob([woffArray.buffer], { type: 'application/font-eot'});
     // var blob = new Blob([woffArray.buffer], { type: 'font/eot'});
     // var blob = new Blob([woffArray.buffer], { type: 'font/ttf'});
-    readBlobAsDataURL(blob, function (basewoff) {
-        if (format_type == "embedded-opentype")
-            basewoff = basewoff + "?#iefix";
-        // var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + accesskey + "' } @font-face { font-family:'yzk-" + accesskey + "'; src:url('" + basewoff + "') format('" + format_type +"'); }  ";
-        var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + fontid + "' } @font-face { font-family:'yzk-" + fontid + "'; src:url('" + basewoff + "') format('" + format_type + "'); }  ";
+    // readBlobAsDataURL(blob, function (basewoff) {
+    //   check_equal(basestr, basewoff);
+    //   });
+        var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + fontid + "' } @font-face { font-family:'yzk-" + fontid + "'; src:url('" + basestr + "') format('" + format_type + "'); }  ";
+        console.log(fontface.substr(fontface.length-100, 100));
         var cssid = "yzk-" + accesskey;
         var stylelist = document.getElementsByName(cssid);
         if (stylelist.length > 0) {
@@ -2071,7 +2149,6 @@ function createfontface(accesskey, woffArray,fontid) {
         } else {
             t.appendChild(document.createTextNode(fontface))
         }
-    });
 
 
     //var basewoff = BASE64Module.fromByteArray(woffArray);
@@ -2164,6 +2241,16 @@ FontProcessModule = (function () {
         this.Unicodes = unicodes;
     }
 
+    function storeData(key, val) {
+      try {
+        // store.set(key, val);
+      } catch(e) {
+        console.log("store except:" + e.toString());
+        store.clear();
+        store.set(key, val);
+      }
+    }
+
     function processInit(json, isSave, accessKey) {
         var info = JSON.parse(json);
         //Println("Notice:" + info.Head.HeadTable);
@@ -2225,7 +2312,7 @@ FontProcessModule = (function () {
             }
         }
         if (isSave) {
-            store.set(accessKey, json);
+            storeData(accessKey, json);
         }
         var objs = yzkgetElementsByClass(accessKey);
         for (var n in objs) {
@@ -2268,7 +2355,7 @@ FontProcessModule = (function () {
             glyfInfoMap.set(glyf.Id, glyf.Unicode, glyf);
         }
         if (isSave) {
-            store.set("cachefont_" + fontId, JSON.stringify(glyfInfoMap.getOneFontGlyfs(fontid)));
+          storeData("cachefont_" + fontId, JSON.stringify(glyfInfoMap.getOneFontGlyfs(fontid)));
         }
         generateOneFont(fontid, accessKey);
     }
