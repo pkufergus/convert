@@ -164,6 +164,7 @@ var BASE64Module = (function () {
         var bytes = new Uint8Array(raw);
         var byteLength = bytes.byteLength;
         var byteRemainder = byteLength % 3;
+        // console.log("src len:"+byteLength + " re:"+ byteRemainder);
         var mainLength = byteLength - byteRemainder;
         var destLen = mainLength / 3 * 4;
         if (byteRemainder > 0) {
@@ -181,13 +182,12 @@ var BASE64Module = (function () {
         for (var i = 0; i < mainLength; i = i + 3) {
             // Combine the three bytes into a single integer
             chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
-            // Use bitmasks to extract 6-bit segments from the triplet
             a = (chunk & 16515072) >> 18; // 16515072 = (2^6 - 1) << 18
-            b = (chunk & 258048) >> 12; // 258048 = (2^6 - 1) << 12
-            c = (chunk & 4032) >> 6; // 4032 = (2^6 - 1) << 6
-            d = chunk & 63; // 63 = 2^6 - 1
+            a = (bytes[i] >> 2) & 63;
+            b = ((bytes[i] & 3) << 4) | ((bytes[i + 1] >> 4) & 15);
+            c = ((bytes[i + 1] & 15) << 2)| ((bytes[i + 2] >> 6) & 3);
+            d = bytes[i + 2] & 63;
             // Convert the raw binary segments to the appropriate ASCII encoding
-            // base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
             arrBuf[k] = encodings[a];
             arrBuf[k+1] = encodings[b];
             arrBuf[k+2] = encodings[c];
@@ -196,11 +196,8 @@ var BASE64Module = (function () {
         }
         // Deal with the remaining bytes and padding
         if (byteRemainder == 1) {
-            chunk = bytes[mainLength];
-            a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2;
-            // Set the 4 least significant bits to zero
-            b = (chunk & 3) << 4 // 3 = 2^2 - 1;
-            // base64 += encodings[a] + encodings[b] + '==';
+            a = (bytes[mainLength] >> 2) & 63;
+            b = (bytes[mainLength] & 3) << 4;
             arrBuf[k] = encodings[a];
             arrBuf[k + 1] = encodings[b];
             arrBuf[k+2] = '=';
@@ -208,12 +205,9 @@ var BASE64Module = (function () {
             k+=4;
         }
         else if (byteRemainder == 2) {
-            chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
-            a = (chunk & 16128) >> 8 // 16128 = (2^6 - 1) << 8;
-            b = (chunk & 1008) >> 4 // 1008 = (2^6 - 1) << 4;
-            // Set the 2 least significant bits to zero
-            c = (chunk & 15) << 2 // 15 = 2^4 - 1;
-            // base64 += encodings[a] + encodings[b] + encodings[c] + '=';
+            a = (bytes[mainLength] >> 2) & 63;
+            b = ((bytes[mainLength] & 3) << 4) | ((bytes[mainLength + 1] >> 4) & 15); 
+            c = (bytes[mainLength + 1] & 15) << 2;
             arrBuf[k] = encodings[a];
             arrBuf[k + 1] = encodings[b];
             arrBuf[k+2] = encodings[c];
@@ -2127,10 +2121,11 @@ function createfontface(accesskey, woffArray,fontid) {
     // var blob = new Blob([woffArray.buffer], { type: 'font/eot'});
     // var blob = new Blob([woffArray.buffer], { type: 'font/ttf'});
     // readBlobAsDataURL(blob, function (basewoff) {
+    //   console.log(basewoff.substr(basewoff.length-100, 100));
     //   check_equal(basestr, basewoff);
     //   });
         var fontface = ".youziku-" + accesskey + "{ font-family:'yzk-" + fontid + "' } @font-face { font-family:'yzk-" + fontid + "'; src:url('" + basestr + "') format('" + format_type + "'); }  ";
-        console.log(fontface.substr(fontface.length-100, 100));
+        // console.log(fontface.substr(fontface.length-100, 100));
         var cssid = "yzk-" + accesskey;
         var stylelist = document.getElementsByName(cssid);
         if (stylelist.length > 0) {
