@@ -171,7 +171,7 @@ var BASE64Module = (function () {
           destLen += 4;
         }
         if (destLen > maxLen) {
-          maxLen = destLen + 1;
+          maxLen = destLen;
           arrBuf = new Array(maxLen);
         }
         var a, b, c, d;
@@ -213,6 +213,9 @@ var BASE64Module = (function () {
             arrBuf[k+2] = encodings[c];
             arrBuf[k+3] = '=';
             k+=4;
+        }
+        if (destLen == maxLen) {
+          return arrBuf.join('');
         }
         var destArray = deepCopyArray(arrBuf, 0, destLen);
         return destArray.join('');
