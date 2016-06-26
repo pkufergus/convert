@@ -2113,10 +2113,10 @@ function createfontface(accesskey, woffArray,fontid) {
     // } else {
     //     blob = new Blob([woffArray], { type: 'application/font-ttf' });
     // }
-    var basestr = BASE64Module.fromByteArray(woffArray);
+    var basestr = BASE64Module.fromByteArray(woffArray.buffer);
     if (br.indexOf("IE") >= 0) {
       format_type = "embedded-opentype";
-      basestr = 'application/vnd.ms-fontobject;base64,' + basestr + "?#iefix";
+      basestr = 'data:application/vnd.ms-fontobject;base64,' + basestr + "?#iefix";
     } else {
       basestr = "data:application/font-ttf;base64,"+basestr;
     }
